@@ -1,0 +1,43 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: perceptilabs-frontend
+  labels: &default-labels
+    app.kubernetes.io/name: perceptilabs-frontend
+    app.kubernetes.io/version: v1.0.0-v1alpha1
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *default-labels
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: *default-labels
+    spec:
+      containers:
+      - name: frontend
+        image: perceptilabs-frontend:latest
+        imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: perceptilabs-frontend
+spec:
+  selector:
+    app.kubernetes.io/name: perceptilabs-frontend
+    app.kubernetes.io/version: v1.0.0-v1alpha1
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: perceptilabs-frontend
+spec:
+  to:
+    kind: Service
+    name: perceptilabs-frontend

@@ -1,0 +1,5 @@
+---
+- version: v1alpha1
+  group: perceptilabs.com
+  kind: Perceptilabs
+  playbook: /opt/ansible/playbook.yml
