@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: core
-        image: perceptilabs-core:latest
+        image: {{ coreImage }}
         imagePullPolicy: IfNotPresent
         # env:
         # - name: FOO

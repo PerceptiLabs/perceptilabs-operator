@@ -3,5 +3,5 @@ kind: Perceptilabs
 metadata:
   name: example-perceptilabs
 spec:
-  # Add fields here
-  size: 3
+  frontendImage: quay.io/jkremser/perceptilabs-frontend:latest
+  coreImage: quay.io/jkremser/perceptilabs-core:latest
