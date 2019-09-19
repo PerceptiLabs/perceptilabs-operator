@@ -1,23 +1,31 @@
-apiVersion: apps/v1beta1
+---
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: perceptilabs-frontend
-  labels: &default-labels
+  namespace: {{ namespace }}
+  labels:
     app.kubernetes.io/name: perceptilabs-frontend
     app.kubernetes.io/version: v1.0.0-v1alpha1
 spec:
   replicas: 1
   selector:
-    matchLabels: *default-labels
+    matchLabels:
+      app.kubernetes.io/name: perceptilabs-frontend
+      app.kubernetes.io/version: v1.0.0-v1alpha1
   strategy:
     type: Recreate
   template:
     metadata:
-      labels: *default-labels
+      annotations:
+        alpha.image.policy.openshift.io/resolve-names: '*'
+      labels:
+        app.kubernetes.io/name: perceptilabs-frontend
+        app.kubernetes.io/version: v1.0.0-v1alpha1
     spec:
       containers:
       - name: frontend
-        image: {{ frontendImage }}
+        image: "{{ frontend_image }}"
         imagePullPolicy: IfNotPresent
 ---
 apiVersion: v1
@@ -37,6 +45,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: perceptilabs-frontend
+  namespace: {{ namespace }}
 spec:
   to:
     kind: Service

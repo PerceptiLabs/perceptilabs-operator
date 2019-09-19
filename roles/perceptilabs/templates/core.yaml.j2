@@ -1,33 +1,39 @@
-apiVersion: apps/v1beta1
+---
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: perceptilabs-core
-  labels: &default-labels
+  namespace: {{ namespace }}
+  labels:
     app.kubernetes.io/name: perceptilabs-core
     app.kubernetes.io/version: v1.0.0-v1alpha1
     app: perceptilabs
 spec:
   replicas: 1
   selector:
-    matchLabels: *default-labels
+    matchLabels:
+      app.kubernetes.io/name: perceptilabs-core
+      app.kubernetes.io/version: v1.0.0-v1alpha1
   strategy:
     type: Recreate
   template:
     metadata:
-      labels: *default-labels
+      annotations:
+        alpha.image.policy.openshift.io/resolve-names: '*'
+      labels:
+        app.kubernetes.io/name: perceptilabs-core
+        app.kubernetes.io/version: v1.0.0-v1alpha1
     spec:
       containers:
       - name: core
-        image: {{ coreImage }}
+        image: "{{ core_image }}"
         imagePullPolicy: IfNotPresent
-        # env:
-        # - name: FOO
-        #   value: "bar"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: perceptilabs-core
+  namespace: {{ namespace }}
 spec:
   selector:
     app.kubernetes.io/name: perceptilabs-core
