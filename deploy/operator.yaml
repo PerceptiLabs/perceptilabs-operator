@@ -1,5 +1,7 @@
 # to be abble to pull the private images from quay, create the secret first in that namespace:
 # oc create secret docker-registry jkremser-quay --docker-email=jkremser@redhat.com --docker-username=jkremser --docker-server=https://quay.io/ --docker-password=***
+# oc import-image --confirm quay.io/jkremser/perceptilabs-core
+# oc set image-lookup perceptilabs-core
 apiVersion: apps/v1
 kind: Deployment
 metadata:
