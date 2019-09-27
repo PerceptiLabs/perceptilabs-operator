@@ -17,3 +17,11 @@ $ oc apply -f deploy/
 4. later on create custom resource representing the perceptilabs
 $ oc apply -f deploy/crds/perceptilabs_v1alpha1_perceptilabs_cr.yaml
 ```
+
+### Building the operator image
+
+Requires [operator-sdk](https://github.com/operator-framework/operator-sdk).
+
+```
+operator-sdk build quay.io/jkremser/perceptilabs-operator:vx.y.z
+```
