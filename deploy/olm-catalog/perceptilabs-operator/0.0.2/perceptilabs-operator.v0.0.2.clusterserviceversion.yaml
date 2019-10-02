@@ -1,0 +1,143 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[{"apiVersion":"perceptilabs.com/v1alpha1","kind":"Perceptilabs","metadata":{"name":"example-perceptilabs"},"spec":{"coreImage":"perceptilabs-core:latest","frontendImage":"perceptilabs-core:latest","namespace":"default"}}]'
+    capabilities: Basic Install
+  name: perceptilabs-operator.v0.0.2
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - kind: Perceptilabs
+      name: perceptilabs.perceptilabs.com
+      version: v1alpha1
+  description: Placeholder description
+  displayName: Perceptilabs Operator
+  install:
+    spec:
+      deployments:
+      - name: perceptilabs-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: perceptilabs-operator
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: perceptilabs-operator
+            spec:
+              containers:
+              - command:
+                - /usr/local/bin/ao-logs
+                - /tmp/ansible-operator/runner
+                - stdout
+                image: quay.io/jkremser/perceptilabs-operator:v0.0.2
+                imagePullPolicy: Always
+                name: ansible
+                resources: {}
+                volumeMounts:
+                - mountPath: /tmp/ansible-operator/runner
+                  name: runner
+                  readOnly: true
+              - env:
+                - name: WATCH_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['olm.targetNamespaces']
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: OPERATOR_NAME
+                  value: perceptilabs-operator
+                image: quay.io/jkremser/perceptilabs-operator:v0.0.2
+                imagePullPolicy: Always
+                name: operator
+                resources: {}
+                volumeMounts:
+                - mountPath: /tmp/ansible-operator/runner
+                  name: runner
+              serviceAccountName: perceptilabs-operator
+              volumes:
+              - emptyDir: {}
+                name: runner
+      permissions:
+      - rules:
+        - apiGroups:
+          - extensions
+          resources:
+          - deployments
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          verbs:
+          - '*'
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          verbs:
+          - '*'
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - apps
+          resourceNames:
+          - perceptilabs-operator
+          resources:
+          - deployments/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+        - apiGroups:
+          - apps
+          resources:
+          - replicasets
+          verbs:
+          - get
+        - apiGroups:
+          - perceptilabs.com
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        serviceAccountName: perceptilabs-operator
+    strategy: deployment
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  maturity: alpha
+  provider: {}
+  version: 0.0.2
