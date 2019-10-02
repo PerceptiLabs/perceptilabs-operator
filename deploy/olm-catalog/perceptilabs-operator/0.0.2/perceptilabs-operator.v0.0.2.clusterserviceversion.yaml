@@ -150,7 +150,7 @@ spec:
     name: Perceptilabs
   version: 0.0.2
   maintainers:
-  - name: Jiri Kremsr
+  - name: Jiri Kremser
     email: jkremser@redhat.com
   links:
   - name: Perceptilabs Operator Source Code
