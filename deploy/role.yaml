@@ -5,12 +5,6 @@ metadata:
   name: perceptilabs-operator
 rules:
 - apiGroups:
-  - extensions
-  resources:
-  - deployments
-  verbs:
-  - '*'
-- apiGroups:
   - ""
   resources:
   - pods

@@ -1,7 +1,3 @@
-# to be abble to pull the private images from quay, create the secret first in that namespace:
-# oc create secret docker-registry jkremser-quay --docker-email=jkremser@redhat.com --docker-username=jkremser --docker-server=https://quay.io/ --docker-password=***
-# oc import-image --confirm quay.io/jkremser/perceptilabs-core
-# oc set image-lookup perceptilabs-core
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -23,15 +19,17 @@ spec:
           - /usr/local/bin/ao-logs
           - /tmp/ansible-operator/runner
           - stdout
-          image: "quay.io/jkremser/perceptilabs-operator:v0.0.2"
-          imagePullPolicy: "Always"
+          # Replace this with the built image name
+          image: "{{ REPLACE_IMAGE }}"
+          imagePullPolicy: "{{ pull_policy|default('Always') }}"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
             name: runner
             readOnly: true
         - name: operator
-          image: "quay.io/jkremser/perceptilabs-operator:v0.0.2"
-          imagePullPolicy: "Always"
+          # Replace this with the built image name
+          image: "{{ REPLACE_IMAGE }}"
+          imagePullPolicy: "{{ pull_policy|default('Always') }}"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
             name: runner

@@ -1,5 +1,2 @@
 ---
 # defaults file for perceptilabs
-namespace: default
-frontend_image: "quay.io/jkremser/perceptilabs-frontend:latest"
-core_image: "quay.io/jkremser/perceptilabs-core:latest"

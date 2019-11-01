@@ -1,10 +1,10 @@
 ---
-- name: Deploy Perceptilabs backend micro service (core)
+- name: Deploy Perceptilabs backend µ-service (core)
   k8s:
     state: present
     definition: "{{ lookup('template', 'core.yaml.j2') }}"
 
-- name: Deploy Perceptilabs frontend micro service
+- name: Deploy Perceptilabs frontend µ-service
   k8s:
     state: present
     definition: "{{ lookup('template', 'frontend.yaml.j2') }}"
