@@ -1,2 +1,4 @@
 ---
 # defaults file for perceptilabs
+frontend_image: "perceptilabs-frontend:latest"
+core_image: "perceptilabs-core:latest"

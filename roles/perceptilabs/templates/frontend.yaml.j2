@@ -2,6 +2,7 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: perceptilabs-frontend
+  namespace: {{ meta.namespace }}
   labels: &default-labels
     app.kubernetes.io/name: perceptilabs-frontend
     app.kubernetes.io/version: v1.0.0-v1alpha1
@@ -17,13 +18,14 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: perceptilabs-frontend:latest
+        image: "{{ frontend_image }}"
         imagePullPolicy: IfNotPresent
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: perceptilabs-frontend
+  namespace: {{ meta.namespace }}
 spec:
   selector:
     app.kubernetes.io/name: perceptilabs-frontend
@@ -37,6 +39,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: perceptilabs-frontend
+  namespace: {{ meta.namespace }}
 spec:
   to:
     kind: Service
