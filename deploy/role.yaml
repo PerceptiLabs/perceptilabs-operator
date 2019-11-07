@@ -5,6 +5,12 @@ metadata:
   name: perceptilabs-operator
 rules:
 - apiGroups:
+  - route.openshift.io
+  resources:
+  - routes
+  verbs:
+  - '*'
+- apiGroups:
   - ""
   resources:
   - pods
