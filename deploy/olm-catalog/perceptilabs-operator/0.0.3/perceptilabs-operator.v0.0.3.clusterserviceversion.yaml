@@ -11,7 +11,7 @@ metadata:
     support: foo@redhat.com
     repository: https://github.com/jkremser/perceptilabs-operator
     certified: "false"
-  name: perceptilabs-operator.v0.0.2
+  name: perceptilabs-operator.v0.0.3
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -44,7 +44,7 @@ spec:
                 - /usr/local/bin/ao-logs
                 - /tmp/ansible-operator/runner
                 - stdout
-                image: registry.connect.redhat.com/perceptilabs/modeling-operator-trial-1
+                image: docker.io/tmckay/perceptilabs-op:v6
                 imagePullPolicy: Always
                 name: ansible
                 resources: {}
@@ -63,7 +63,7 @@ spec:
                       fieldPath: metadata.name
                 - name: OPERATOR_NAME
                   value: perceptilabs-operator
-                image: registry.connect.redhat.com/perceptilabs/modeling-operator-trial-1
+                image: docker.io/tmckay/perceptilabs-op:v6
                 imagePullPolicy: Always
                 name: operator
                 resources: {}
@@ -76,6 +76,12 @@ spec:
                 name: runner
       permissions:
       - rules:
+        - apiGroups:
+          - route.openshift.io
+          resources:
+          - routes
+          verbs:
+          - '*'
         - apiGroups:
           - extensions
           resources:
@@ -155,7 +161,8 @@ spec:
     - Drag and Drop
   provider:
     name: PerceptiLabs
-  version: 0.0.2
+  replaces: perceptilabs-operator.v0.0.2
+  version: 0.0.3
   maintainers:
   - name: Robert Lundberg
     email: robert.l@perceptilabs.com
