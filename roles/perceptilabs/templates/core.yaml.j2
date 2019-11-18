@@ -21,9 +21,20 @@ spec:
       - name: core
         image: "{{ core_image }}"
         imagePullPolicy: IfNotPresent
-        # env:
-        # - name: FOO
-        #   value: "bar"
+{% if core_gpus %}
+        resources:
+          limits:
+            nvidia.com/gpu: "{{ core_gpus }}"
+{% endif %}
+{% if core_pvc %}
+        volumeMounts:
+        - mountPath: /mnt/plabs
+          name: core-data-volume
+      volumes:
+      - name: core-data-volume
+        persistentVolumeClaim:
+          claimName: "{{ core_pvc }}"
+{% endif %}
 ---
 apiVersion: v1
 kind: Service

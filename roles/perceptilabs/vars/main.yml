@@ -1,2 +1,4 @@
 ---
 # vars file for perceptilabs
+core_gpus: null
+core_pvc: null
