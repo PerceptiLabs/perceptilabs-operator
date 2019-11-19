@@ -4,4 +4,7 @@ metadata:
   name: example-perceptilabs
 spec:
   # Add fields here
-  size: 3
+  # frontendImage: quay.io/tmckayus/perceptilabs-frontend:v5
+  # coreImage: quay.io/tmckayus/perceptilabs-core:v5
+  # coreGpus: 3
+  # corePvc: mydata
