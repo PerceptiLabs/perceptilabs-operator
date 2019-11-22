@@ -2,9 +2,10 @@ apiVersion: perceptilabs.com/v1alpha1
 kind: Perceptilabs
 metadata:
   name: example-perceptilabs
+  namespace: p1
 spec:
-  # Add fields here
-  # frontendImage: quay.io/tmckayus/perceptilabs-frontend:v5
-  # coreImage: quay.io/tmckayus/perceptilabs-core:v5
+  coreImage: perceptilabs.azurecr.io/core:latest
+  frontendImage: perceptilabs.azurecr.io/frontend:latest
+  namespace: p1
   # coreGpus: 3
   # corePvc: mydata

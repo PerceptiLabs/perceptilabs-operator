@@ -5,7 +5,9 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: perceptilabs-operator
+  namespace: p1
 roleRef:
   kind: Role
   name: perceptilabs-operator
   apiGroup: rbac.authorization.k8s.io
+  namespace: p1

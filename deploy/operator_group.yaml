@@ -1,0 +1,10 @@
+
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: p1-operatorgroup
+  namespace: p1
+spec:
+  serviceAccountNam: perceptilabs-operator
+  targetNamespaces:
+  - p1

@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+get_pod(){
+  sleep 1
+  oc get pods --namespace openshift-marketplace | grep perceptilabs-operators- | grep Running | awk '{print $1}'
+  return $?
+}
+
+get_logs(){
+  sleep 1
+  oc logs $1 --namespace=openshift-marketplace | grep -i "serving registry\|error"
+  return $?
+}
+
+oc delete operatorsource perceptilabs-operators --namespace=openshift-marketplace
+oc create -f olm-catalog/operator-source.yaml
+echo -n Waiting for pod to start ...
+POD=$(get_pod)
+while [ -z ${POD} ]; do
+  echo -n .
+  POD=$( get_pod )
+done
+echo done
+echo Pod: ${POD}
+
+echo -n Waiting for pod to serve ...
+get_logs ${POD}
+while [ $? != 0 ]; do
+  echo -n .
+  get_logs ${POD}
+done
+echo done
+

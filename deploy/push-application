@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+if [ -z ${VERSION} ]; then
+  echo "VERSION isn't set"
+  exit 1
+fi
+
+if [ -z ${QUAY_USER} ]; then
+  read -s -p "Enter your username for quay.io: " QUAY_USER
+fi
+
+if [ -z ${QUAY_PASSWORD} ]; then
+  read -s -p "Enter your password for quay.io: " QUAY_PASSWORD
+fi
+
+QUAY_ACCOUNT=perceptilabs
+AUTH_TOKEN=$(curl -sH "Content-Type: application/json" -XPOST https://quay.io/cnr/api/v1/users/login -d '
+{
+    "user": {
+        "username": "'"perceptilabs"'",
+        "password": "'"${QUAY_PASSWORD}"'"
+    }
+}' | jq -r '.token')
+echo
+CATALOG=olm-catalog/perceptilabs-operator-beta
+REPOSITORY=perceptilabs-operator-beta
+operator-courier --verbose push ${CATALOG} ${QUAY_ACCOUNT} ${REPOSITORY} ${VERSION} "${AUTH_TOKEN}"
+if [ $? -ne 0 ]; then echo push failed; exit 1; fi

@@ -1,0 +1,11 @@
+certifi==2019.9.11
+chardet==3.0.4
+decorator==4.4.1
+idna==2.8
+operator-courier==2.1.7
+PyYAML==5.1.2
+requests==2.22.0
+semver==2.9.0
+six==1.13.0
+urllib3==1.25.7
+validators==0.14.0
