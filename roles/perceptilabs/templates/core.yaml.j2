@@ -17,6 +17,7 @@ spec:
     metadata:
       labels: *default-labels
     spec:
+      serviceAccountName: "{{ service_account_name }}"
       containers:
       - name: core
         image: "{{ core_image }}"

@@ -12,7 +12,10 @@ get_logs(){
   return $?
 }
 
-oc delete operatorsource perceptilabs-operators --namespace=openshift-marketplace
+oc get operatorsource --namespace=openshift-marketplace perceptilabs-operators &>/dev/null
+if [ $? == 0 ]; then
+  oc delete operatorsource --namespace=openshift-marketplace perceptilabs-operators 
+fi
 oc create -f olm-catalog/operator-source.yaml
 echo -n Waiting for pod to start ...
 POD=$(get_pod)

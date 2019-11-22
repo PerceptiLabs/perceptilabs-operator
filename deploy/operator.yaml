@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: perceptilabs-operator
-  namespace: p1
 spec:
   replicas: 1
   selector:
@@ -13,7 +12,6 @@ spec:
       labels:
         name: perceptilabs-operator
     spec:
-      serviceAccountName: perceptilabs-operator
       containers:
         - name: ansible
           command:
@@ -21,16 +19,16 @@ spec:
           - /tmp/ansible-operator/runner
           - stdout
           # Replace this with the built image name
-          image: "quay.io/perceptilabs/perceptilabs-operator-beta:v0.0.3"
-          imagePullPolicy: "Always"
+          image: "{{ REPLACE_IMAGE }}"
+          imagePullPolicy: "{{ pull_policy|default('Always') }}"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
             name: runner
             readOnly: true
         - name: operator
           # Replace this with the built image name
-          image: "quay.io/perceptilabs/perceptilabs-operator-beta:v0.0.3"
-          imagePullPolicy: "Always"
+          image: "{{ REPLACE_IMAGE }}"
+          imagePullPolicy: "{{ pull_policy|default('Always') }}"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
             name: runner

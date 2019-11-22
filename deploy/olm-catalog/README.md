@@ -1,5 +1,5 @@
 A bundled version of the contents of perceptilabs-operator has
-been pushed to perceptilabs.azurecr.io/perceptilabs-operator. It can be
+been pushed to quay.io/perceptilabs/perceptilabs-operator. It can be
 added to OpenShift by creating the OperatorSource included here.
 
 ```

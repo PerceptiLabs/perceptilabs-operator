@@ -44,7 +44,7 @@ spec:
                 - /usr/local/bin/ao-logs
                 - /tmp/ansible-operator/runner
                 - stdout
-                image: perceptilabs.azurecr.io/perceptilabs-operator:latest
+                image: quay.io/perceptilabs/perceptilabs-operator:latest
                 imagePullPolicy: Always
                 name: ansible
                 resources: {}
@@ -63,14 +63,16 @@ spec:
                       fieldPath: metadata.name
                 - name: OPERATOR_NAME
                   value: perceptilabs-operator
-                image: perceptilabs.azurecr.io/perceptilabs-operator:latest
+                image: quay.io/perceptilabs/perceptilabs-operator:latest
                 imagePullPolicy: Always
                 name: operator
                 resources: {}
                 volumeMounts:
                 - mountPath: /tmp/ansible-operator/runner
                   name: runner
-              serviceAccountName: perceptilabs-operator
+              serviceAccountName: default
+              imagePullSecrets:
+              - name: perceptilabs-docker
               volumes:
               - emptyDir: {}
                 name: runner
@@ -142,7 +144,7 @@ spec:
           - '*'
           verbs:
           - '*'
-        serviceAccountName: perceptilabs-operator
+        serviceAccountName: default
     strategy: deployment
   installModes:
   - supported: true
