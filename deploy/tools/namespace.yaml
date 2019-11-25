@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: p1
+  name: ${NS}
 ---
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
-  name: p1-operatorgroup
-  namespace: p1
+  name: ${NS}-operatorgroup
+  namespace: ${NS}
 spec:
   targetNamespaces:
-  - p1
+  - ${NS}

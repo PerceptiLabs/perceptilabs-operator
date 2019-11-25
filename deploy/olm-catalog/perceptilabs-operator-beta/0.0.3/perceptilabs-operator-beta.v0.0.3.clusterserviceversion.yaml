@@ -9,7 +9,6 @@ metadata:
     containerImage: registry.connect.redhat.com/perceptilabs/modeling-operator-trial-1
     createdAt: 2019-10-02T12:00:00Z
     support: foo@redhat.com
-    repository: https://github.com/jkremser/perceptilabs-operator
     certified: "false"
   name: perceptilabs-operator-beta.v0.0.3
   namespace: p1

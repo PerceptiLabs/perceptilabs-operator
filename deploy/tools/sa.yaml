@@ -1,15 +1,7 @@
 apiVersion: v1
 imagePullSecrets:
-- name: perceptilabs-operator-dockercfg-s6bsn
 - name: perceptilabs-docker
 kind: ServiceAccount
 metadata:
-  creationTimestamp: "2019-11-25T15:58:07Z"
-  name: perceptilabs-operator
-  namespace: p1
-  resourceVersion: "2342275"
-  selfLink: /api/v1/namespaces/p1/serviceaccounts/perceptilabs-operator
-  uid: 5f435767-0f9c-11ea-8e50-023304f83288
-secrets:
-- name: perceptilabs-operator-dockercfg-s6bsn
-- name: perceptilabs-operator-token-gd54f
+  name: ${SA_NAME}
+  namespace: ${NS}

@@ -16,7 +16,11 @@ oc get operatorsource --namespace=openshift-marketplace perceptilabs-operators &
 if [ $? == 0 ]; then
   oc delete operatorsource --namespace=openshift-marketplace perceptilabs-operators 
 fi
-oc create -f olm-catalog/operator-source.yaml
+
+TOOLS_DIR="$(dirname $0)"
+
+oc apply -f "${TOOLS_DIR}/../olm-catalog/operator-source.yaml"
+
 echo -n Waiting for pod to start ...
 POD=$(get_pod)
 while [ -z ${POD} ]; do

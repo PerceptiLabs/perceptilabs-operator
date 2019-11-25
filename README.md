@@ -7,6 +7,7 @@
 * [operator-sdk](https://github.com/operator-framework/operator-sdk)
 * `operator-courier` (installed with `pip install -r requirements.txt`)
 * [jq](https://stedolan.github.io/jq/download/)
+* `envsubst` in your path.
 
 ## Build The Operator Image
 
@@ -28,7 +29,6 @@ docker tag quay.io/perceptilabs/perceptilabs-operator:v1 quay.io/perceptilabs/pe
 docker push quay.io/perceptilabs/perceptilabs-operator:latest
 ```
 
-
 ## Make the Operator Available
 
 1. Move to the deploy directory
@@ -44,7 +44,7 @@ Give it the quay.io password when it asks. Alternatively, set `QUAY_AUTH_TOKEN` 
 
 3. Go to the application on the [quay website](https://quay.io/application/perceptilabs/perceptilabs-operator-beta) and make sure it's public
 
-## Deploy Operator to Cluster
+## Deploy Operator Application to Cluster
 
 1. Set up your creds
 ```
@@ -55,51 +55,19 @@ $  export KUBECONFIG=<path to your kubeconfig for the cluster>
 $ oc login <path to the cluster>
 ```
 
-2. create custom resource definiton
-*TODO: this should be built into the operator*
-```
-$ oc apply -f crds/perceptilabs_v1alpha1_perceptilabs_crd.yaml
-```
-
-3. Add the operator to the cluster and wait
+2. Add the operator to the cluster and wait
 ```
 $ tools/add-operator-and-wait
 ```
 
 ## Set Up Namespace for Operator
 
-1. Create the namespace
+1. Set up for the namespace
 ```
-$ oc apply -f tools/namespace.yaml
-```
-
-2. Create the container registry secret
-```
-$ oc create secret docker-registry perceptilabs-docker --namespace=p1 --docker-server=perceptilabs.azurecr.io --docker-username=perceptilabs --docker-password=<password>
-```
-
-3. Create the service account in the namespace
-```
-$ oc apply -f tools/sa.yaml
-```
-
-4. Subscribe to the operator in the namespace
-```
-$ tools/subscribe-and-wait
-```
-
-## Instantiate the Operator
-
-1. Create instance of Perceptilabs custom resource that will then run
-   the core and frontend
-```
-$ oc apply -f tools/start-instance.yaml  
+NS=your-namespace SA_NAME=perceptilabs-operator-sa PL_DOCKER_PWD=<password> tools/set-up-namespace
 ```
 
 ## Complete Removal
 ```
-oc delete namespace p1
-oc delete deployment -n openshift-marketplace perceptilabs-operators
-oc delete operatorsources --namespace=openshift-marketplace perceptilabs-operators
-oc delete customresourcedefinitions perceptilabs.perceptilabs.com
+NS=your-namespace tools/clean
 ```
