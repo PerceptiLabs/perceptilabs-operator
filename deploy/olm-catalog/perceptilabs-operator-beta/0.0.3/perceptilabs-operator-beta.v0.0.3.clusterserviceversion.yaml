@@ -2,16 +2,15 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
   annotations:
-    alm-examples: '[{"apiVersion":"perceptilabs.com/v1alpha1","kind":"Perceptilabs","metadata":{"name":"example-perceptilabs"},"spec":{"coreImage":"perceptilabs.azurecr.io/core:latest","frontendImage":"perceptilabs.azurecr.io/frontend:latest","namespace":"p1"}}]'
+    alm-examples: '[{"apiVersion":"perceptilabs.com/v1alpha1","kind":"Perceptilabs","metadata":{"name":"example-perceptilabs"},"spec":{"coreImage":"perceptilabs.azurecr.io/core:latest","frontendImage":"perceptilabs.azurecr.io/frontend:latest","namespace":"your-namespace"}}]'
     capabilities: Basic Install
     description: AI platform which lets you Build, Train and Analyze
     categories: AI/Machine Learning
-    containerImage: registry.connect.redhat.com/perceptilabs/modeling-operator-trial-1
+    containerImage: quay.io/perceptilabs/perceptilabs-operator
     createdAt: 2019-10-02T12:00:00Z
-    support: foo@redhat.com
+    support: support@perceptilabs.com
     certified: "false"
   name: perceptilabs-operator-beta.v0.0.3
-  namespace: p1
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
