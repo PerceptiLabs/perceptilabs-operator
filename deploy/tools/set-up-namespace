@@ -13,9 +13,12 @@ apply_tools_script(){
 
 apply_tools_script namespace.yaml "Creating namespace ${NS}"
 
-echo -n "Creating secret perceptilabs-docker"
-oc create secret docker-registry perceptilabs-docker --namespace=${NS} --docker-server=perceptilabs.azurecr.io --docker-username=perceptilabs --docker-password=${PL_DOCKER_PWD}
-if [ $? != 0 ]; then echo failed; exit 1; fi
+oc get secret -n your-ns perceptilabs-docker &>/dev/null
+if [ $? != 0 ]; then
+  echo -n "Creating secret perceptilabs-docker"
+  oc create secret docker-registry perceptilabs-docker --namespace=${NS} --docker-server=perceptilabs.azurecr.io --docker-username=perceptilabs --docker-password=${PL_DOCKER_PWD}
+  if [ $? != 0 ]; then echo failed; exit 1; fi
+fi
 
 apply_tools_script sa.yaml "Creating serviceaccount ${SA_NAME}"
 apply_tools_script subscription.yaml "Creating subscription to perceptilabs-operator-beta"
