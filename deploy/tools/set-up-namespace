@@ -68,15 +68,15 @@ echo done
 
 get_route(){
   sleep 1
-  oc get route --namespace=${NS} perceptilabs-frontend -o jsonpath="{.spec.host}"
+  oc get route --namespace=${NS} perceptilabs-frontend -o jsonpath="{.spec.host}" 2>/dev/null
   return $?
 }
 
 echo -n Waiting for route ...
-get_route
+ROUTE=$(get_route)
 while [ $? != 0 ]; do
   echo -n .
-  get_route
+  ROUTE=$(get_route)
 done
 echo done
-echo "Frontend is available at $(get_route)"
+echo "Frontend is available at ${ROUTE}"
