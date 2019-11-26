@@ -12,6 +12,7 @@ apply_tools_script(){
 }
 
 apply_tools_script namespace.yaml "Creating namespace ${NS}"
+apply_tools_script persistentvolume.yaml "Creating persistent volume in ${NS}"
 
 oc get secret -n your-ns perceptilabs-docker &>/dev/null
 if [ $? != 0 ]; then

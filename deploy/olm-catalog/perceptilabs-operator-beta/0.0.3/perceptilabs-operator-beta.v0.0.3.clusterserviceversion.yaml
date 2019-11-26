@@ -2,7 +2,7 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
   annotations:
-    alm-examples: '[{"apiVersion":"perceptilabs.com/v1alpha1","kind":"Perceptilabs","metadata":{"name":"example-perceptilabs"},"spec":{"coreImage":"perceptilabs.azurecr.io/core:latest","frontendImage":"perceptilabs.azurecr.io/frontend:latest","namespace":"your-namespace"}}]'
+    alm-examples: '[{"apiVersion":"perceptilabs.com/v1alpha1","kind":"Perceptilabs","metadata":{"name":"example-perceptilabs"},"spec":{"coreImage":"perceptilabs.azurecr.io/core:latest","frontendImage":"perceptilabs.azurecr.io/frontend:latest","namespace":"your-namespace", "corePvc": "perceptilabs-pvc"}}]'
     capabilities: Basic Install
     description: AI platform which lets you Build, Train and Analyze
     categories: AI/Machine Learning

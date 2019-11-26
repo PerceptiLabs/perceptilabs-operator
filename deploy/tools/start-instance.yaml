@@ -8,5 +8,5 @@ spec:
   frontendImage: perceptilabs.azurecr.io/frontend:latest
   serviceAccountName: ${SA_NAME}
   namespace: ${NS}
+  corePvc: perceptilabs-pvc
   # coreGpus: 3
-  # corePvc: mydata
