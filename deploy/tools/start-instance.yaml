@@ -6,6 +6,7 @@ metadata:
 spec:
   coreImage: perceptilabs.azurecr.io/core:latest
   frontendImage: perceptilabs.azurecr.io/frontend:latest
+  serviceAccountName: ${SA_NAME}
   namespace: ${NS}
   # coreGpus: 3
   # corePvc: mydata
