@@ -50,3 +50,13 @@ spec:
   - protocol: TCP
     port: 5000
     targetPort: 5000
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: perceptilabs-core
+  namespace: {{ meta.namespace }}
+spec:
+  to:
+    kind: Service
+    name: perceptilabs-core
