@@ -1,15 +1,15 @@
-kind: PersistentVolume
-apiVersion: v1
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
 metadata:
-  name: perceptilabs-pv
-spec:
-  storageClassName: gp2
-  capacity:
-    storage: 50Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/mnt/data"
+  name: perceptilabs-example-sc
+  annotations:
+    description: Example Storage for Perceptilabs
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  fsType: ext4
+  type: gp2
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -17,7 +17,7 @@ metadata:
   name: perceptilabs-pvc
   namespace: ${NS}
 spec:
-  storageClassName: gp2
+  storageClassName: perceptilabs-example-sc
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce

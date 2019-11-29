@@ -14,9 +14,10 @@ apply_tools_script(){
 apply_tools_script namespace.yaml "Creating namespace ${NS}"
 apply_tools_script persistentvolume.yaml "Creating persistent volume in ${NS}"
 
-oc get secret -n your-ns perceptilabs-docker &>/dev/null
+# create the secret idempotently, but withouth the "create" command
+oc get secret --namespace ${NS} perceptilabs-docker &>/dev/null
 if [ $? != 0 ]; then
-  echo -n "Creating secret perceptilabs-docker"
+  echo -n "Creating secret perceptilabs-docker ..."
   oc create secret docker-registry perceptilabs-docker --namespace=${NS} --docker-server=perceptilabs.azurecr.io --docker-username=perceptilabs --docker-password=${PL_DOCKER_PWD}
   if [ $? != 0 ]; then echo failed; exit 1; fi
 fi

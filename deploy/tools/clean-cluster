@@ -2,5 +2,6 @@
 
 "$(dirname $0)/clean-ns"
 oc delete customresourcedefinitions perceptilabs.perceptilabs.com
+oc delete storageclass perceptilabs-example-sc
 oc delete deployment --namespace=openshift-marketplace perceptilabs-operators
 oc delete operatorsources --namespace=openshift-marketplace perceptilabs-operators
