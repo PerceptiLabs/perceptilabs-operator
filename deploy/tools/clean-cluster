@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-if [ -z "${NS}" ]; then echo Missing NS variable; exit 1; fi
-
-oc delete namespace ${NS}
-
+"$(dirname $0)/clean-ns"
 oc delete customresourcedefinitions perceptilabs.perceptilabs.com
 oc delete deployment --namespace=openshift-marketplace perceptilabs-operators
 oc delete operatorsources --namespace=openshift-marketplace perceptilabs-operators

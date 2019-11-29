@@ -69,5 +69,5 @@ NS=your-namespace SA_NAME=perceptilabs-operator-sa PL_DOCKER_PWD=<password> tool
 
 ## Complete Removal
 ```
-NS=your-namespace tools/clean
+NS=your-namespace tools/clean-cluster
 ```
