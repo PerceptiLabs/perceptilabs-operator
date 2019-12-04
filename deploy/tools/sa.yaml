@@ -3,5 +3,5 @@ imagePullSecrets:
 - name: perceptilabs-docker
 kind: ServiceAccount
 metadata:
-  name: ${SA_NAME}
-  namespace: ${NS}
+  name: REPLACE_SERVICEACCOUNT_NAME
+  namespace: REPLACE_NAMESPACE

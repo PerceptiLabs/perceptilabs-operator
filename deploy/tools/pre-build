@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [ $# -ne 2 ]; then
+  echo USAGE: $0 url version
+  exit 1
+fi
+
+URL=$1
+OPERATOR_VERSION=$2
+curl -s ${URL} | jq .\[\].release | grep -q "${OPERATOR_VERSION}"
+if [ $? != 0 ]; then
+  exit 0
+fi
+
+echo "Version ${OPERATOR_VERSION} already exists"
+exit 1

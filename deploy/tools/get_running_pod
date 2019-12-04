@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+if [ $# -ne 2 ]; then
+  echo USAGE: $0 \<namespace\> \<pod pattern\>
+  exit 1
+fi
+NS=$1
+POD_PATTERN=$2
+
+
+TOOLS_DIR="$(dirname $0)"
+"${TOOLS_DIR}/get_pod" ${NS} "${POD_PATTERN}"
+POD=$( "${TOOLS_DIR}/get_pod" ${NS} "${POD_PATTERN}" | tail -n 1 )
+
+get_status(){
+  oc get pod --namespace=${NS} ${POD} --output=template={{.status.phase}}
+}
+
+PHASE=$(get_status)
+if [ "${PHASE}" == "Running" ]; then
+  echo ${POD}
+  exit 0
+fi
+
+echo -n "Waiting for ${POD} to enter Running state ..."
+sleep 1
+PHASE=$(get_status)
+while [ "${PHASE}" != "Running" ]; do
+  sleep 1
+  echo "   ${PHASE}"
+  PHASE=$(get_status)
+done
+echo done
+echo ${POD}
+exit 0

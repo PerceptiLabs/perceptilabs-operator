@@ -43,6 +43,9 @@ spec:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
               value: "perceptilabs-operator"
+      serviceAccountName: default
+      imagePullSecrets:
+      - name: perceptilabs-docker
       volumes:
         - name: runner
           emptyDir: {}

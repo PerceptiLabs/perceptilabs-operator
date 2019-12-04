@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+if [ $# -lt 4 ]; then
+  echo missing arguments
+  echo USAGE: $0 old-version new-version operator-image operator-app-name
+  exit 1
+fi
+
+OLDVERSION=$1
+NEWVERSION=$2
+IMG=$3
+APP_NAME=$4
+
+APP_DIR=deploy/olm-catalog/${APP_NAME}
+
+# Prevent accidental overwrites
+NEW_VERSION_DIR=${APP_DIR}/${NEWVERSION}
+NEW_CSV=${NEW_VERSION_DIR}/${APP_NAME}.v${NEWVERSION}.clusterserviceversion.yaml
+if [ -f "${NEW_CSV}" ]; then
+  echo "The new csv already exists at ${NEW_CSV}"
+  read -s -p "Overwrite it? [y/N] " RESPONSE
+  if [ "${RESPONSE}" != 'y' ]; then exit 0; fi
+fi
+
+# Insist on a previous version, since operator-sdk will happily work without one and make a mess
+OLD_CSV=${APP_DIR}/${OLDVERSION}/${APP_NAME}.v${OLDVERSION}.clusterserviceversion.yaml
+if [ ! -f ${OLD_CSV} ]; then
+  echo "Old csv isn't there. Expected ${OLD_CSV} to exist"
+  exit 1
+fi
+
+# Make the version
+operator-sdk olm-catalog gen-csv --from-version=${OLDVERSION} --csv-version=${NEWVERSION} --operator-name=${APP_NAME}
+
+# operator-courier checks that the crd is in the same directory as the csv. Link it there.
+pushd ${NEW_VERSION_DIR}
+ln -fs ../../../crds/perceptilabs_v1alpha1_perceptilabs_crd.yaml perceptilabs_v1alpha1_perceptilabs_crd.yaml
+popd
+
+# operator-sdk puts an extra placeholder namespace in. Remove it.
+yq delete --inplace ${NEW_CSV} metadata.namespace
+
+# deploy/operator.yaml includes placeholders that need to be updated
+sed -i "" "s|'{{ REPLACE_IMAGE }}'|${IMG}:v${NEWVERSION}|g" ${NEW_CSV}
+sed -i "" "s/'{{ pull_policy.* }}'/Always/g" ${NEW_CSV}
+
+# we want the default service account. TODO: figure out why operator-sdk forces perceptilabs-operator in here
+sed -i "" "s/serviceAccountName.*$/serviceAccountName: default/g" ${NEW_CSV}

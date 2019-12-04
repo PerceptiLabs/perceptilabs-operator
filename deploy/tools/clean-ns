@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-if [ -z "${NS}" ]; then echo Missing NS variable; exit 1; fi
-
-oc delete namespace ${NS}

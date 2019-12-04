@@ -15,7 +15,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: perceptilabs-pvc
-  namespace: ${NS}
+  namespace: REPLACE_NAMESPACE
 spec:
   storageClassName: perceptilabs-example-sc
   volumeMode: Filesystem
