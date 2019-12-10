@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-if [ $# -ne 2 ]; then
-  echo USAGE: $0 \<namespace\> \<pod pattern\>
+if [ $# -lt 2 ]; then
+  echo "USAGE: $0 <namespace> <pod pattern> [-q]"
   exit 1
 fi
 NS=$1
 POD_PATTERN=$2
-
+QUIET=$3
 
 TOOLS_DIR="$(dirname $0)"
-"${TOOLS_DIR}/get_pod" ${NS} "${POD_PATTERN}"
+"${TOOLS_DIR}/get_pod" ${NS} "${POD_PATTERN}" -q
 POD=$( "${TOOLS_DIR}/get_pod" ${NS} "${POD_PATTERN}" | tail -n 1 )
 
 get_status(){
@@ -17,19 +17,18 @@ get_status(){
 }
 
 PHASE=$(get_status)
-if [ "${PHASE}" == "Running" ]; then
-  echo ${POD}
-  exit 0
+if [ "${PHASE}" != "Running" ]; then
+  echo -n "Waiting for ${POD} to enter 'Running' state ..."
+  sleep 1
+  PHASE=$(get_status)
+  while [ "${PHASE}" != "Running" ]; do
+    sleep 1
+    echo -n "."
+    PHASE=$(get_status)
+  done
+  echo "done"
 fi
 
-echo -n "Waiting for ${POD} to enter Running state ..."
-sleep 1
-PHASE=$(get_status)
-while [ "${PHASE}" != "Running" ]; do
-  sleep 1
-  echo "   ${PHASE}"
-  PHASE=$(get_status)
-done
-echo done
-echo ${POD}
-exit 0
+if [ "${QUIET}" != "-q" ]; then
+  echo ${POD}
+fi

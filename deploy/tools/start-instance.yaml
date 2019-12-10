@@ -9,4 +9,4 @@ spec:
   serviceAccountName: REPLACE_SERVICEACCOUNT_NAME
   namespace: REPLACE_NAMESPACE
   corePvc: perceptilabs-pvc
-  # coreGpus: 1
+  coreGpus: 0

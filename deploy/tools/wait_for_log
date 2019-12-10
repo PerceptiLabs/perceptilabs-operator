@@ -7,7 +7,7 @@ fi
 
 TOOLS_DIR="$(dirname $0)"
 NS=$1
-"${TOOLS_DIR}/get_running_pod" ${NS} $2
+"${TOOLS_DIR}/get_running_pod" ${NS} $2 -q
 POD=$( "${TOOLS_DIR}/get_running_pod" ${NS} $2 | tail -n 1 )
 LOG_PATTERN=$3
 CONTAINER=$4

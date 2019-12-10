@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
-if [ $# -ne 2 ]; then
-  echo USAGE: $0 \<namespace\> \<pod pattern\>
+USG="USAGE: $0 <namespace> <pod pattern> [-q]"
+if [ $# -lt 2 ]; then
+  echo ${USG}
   exit 1
 fi
 NS=$1
 POD_PATTERN=$2
-
+QUIET=$3
 
 if [ -z "${POD_PATTERN}" ]; then
-  echo USAGE: $0 \<pattern\>
+  echo ${USG}
   exit 1
 fi
 
@@ -23,17 +24,17 @@ get_from_oc(){
 }
 
 GOT=$(get_from_oc "${POD_PATTERN}")
-if [ $? == 0 ]; then
-  echo ${GOT}
-  exit 0
+if [ $? != 0 ]; then
+  echo -n "Waiting for pod matching '${POD_PATTERN}'..."
+  GOT=$(get_from_oc "${POD_PATTERN}")
+  while [ -z "${GOT}" ]; do
+    sleep 1
+    echo -n .
+    GOT=$(get_from_oc "${POD_PATTERN}")
+  done
+  echo "done"
 fi
 
-echo -n "Waiting for pod ..."
-GOT=$(get_from_oc "${POD_PATTERN}")
-while [ -z "${GOT}" ]; do
-  sleep 1
-  echo -n .
-  GOT=$(get_from_oc "${POD_PATTERN}")
-done
-echo done
-echo ${GOT}
+if [ "${QUIET}" != "-q" ]; then
+  echo ${GOT}
+fi
