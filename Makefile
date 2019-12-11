@@ -56,10 +56,10 @@ instance: subscription ## Install perceptilabs in NAMESPACE
 	@${TEMPLATE_CMD} ${TOOLS_DIR}/start-instance.yaml | oc apply -f -
 
 route: frontend-pod ## Get the frontend route for perceptilabs in NAMESPACE
-	@${TOOLS_DIR}/get_route ${NAMESPACE} perceptilabs-frontend
+	@${TOOLS_DIR}/get_live_route ${NAMESPACE} perceptilabs-frontend
 
 core-pod: instance
-	@${TOOLS_DIR}/get_running_pod ${NAMESPACE} perceptilabs-core- | tail -n 1
+	@"${TOOLS_DIR}/wait_for_log" "${NAMESPACE}" "perceptilabs-core-" "Connected" "core"
 	@$(eval CORE_POD=$(shell ${TOOLS_DIR}/get_running_pod ${NAMESPACE} perceptilabs-core- | tail -n 1))
 
 frontend-pod: instance

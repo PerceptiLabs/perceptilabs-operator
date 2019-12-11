@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
-if [ $# -ne 2 ]; then
-  echo USAGE: $0 \<namespace\> \<pod pattern\>
+if [ $# -lt 2 ]; then
+  echo "USAGE: $0 <namespace> <pod pattern> [-q]"
   exit 1
 fi
+
 NS=$1
 ROUTE_NAME=$2
+QUIET=$3
 
 get_from_oc(){
   oc get route --namespace=${NS} ${ROUTE_NAME} -o jsonpath="{.spec.host}" 2>/dev/null
@@ -13,17 +15,17 @@ get_from_oc(){
 }
 
 GOT=$(get_from_oc)
-if [ $? == 0 ]; then
-  echo ${ROUTE_NAME} is available at ${GOT}
-  exit 0
+if [ $? != 0 ]; then
+  echo -n Waiting for route ...
+  GOT=$(get_from_oc)
+  while [ $? != 0 ]; do
+    sleep 1
+    echo -n .
+    GOT=$(get_from_oc)
+  done
+  echo "done"
 fi
 
-echo -n Waiting for route ...
-GOT=$(get_from_oc)
-while [ $? != 0 ]; do
-  sleep 1
-  echo -n .
-  GOT=$(get_from_oc)
-done
-echo done
-echo ${ROUTE_NAME} is available at ${GOT}
+if [ "${QUIET}" != "-q" ]; then
+  echo ${GOT}
+fi
