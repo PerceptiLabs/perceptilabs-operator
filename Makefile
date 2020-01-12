@@ -17,7 +17,7 @@ make-new-version: require-NEW_VERSION ## Create a new version of the operator
 	@read -p "Make sure you update the OPERATOR_VERSION in the Makefile [ok]"
 
 release: require-QUAY_AUTH_TOKEN ## Push the current version of the operator to the repos
-	@${TOOLS_DIR}/pre-build ${APP_REGISTRY_API}/${REGISTRY_ACCOUNT}/${APP_REPOSITORY} ${OPERATOR_VERSION}
+	@${TOOLS_DIR}/pre-check ${APP_REGISTRY_API}/${REGISTRY_ACCOUNT}/${APP_REPOSITORY} ${OPERATOR_VERSION}
 	operator-sdk build ${OPERATOR_REPO}:v${OPERATOR_VERSION}
 	docker push ${OPERATOR_REPO}:v${OPERATOR_VERSION}
 	operator-courier --verbose push ${OLM_CATALOG_DIR}/${APP_NAME} ${REGISTRY_ACCOUNT} ${APP_REPOSITORY} ${OPERATOR_VERSION} "${QUAY_AUTH_TOKEN}"
