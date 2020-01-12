@@ -15,7 +15,8 @@ APP_DIR=deploy/olm-catalog/${APP_NAME}
 
 # Prevent accidental overwrites
 NEW_VERSION_DIR=${APP_DIR}/${NEWVERSION}
-NEW_CSV=${NEW_VERSION_DIR}/${APP_NAME}.v${NEWVERSION}.clusterserviceversion.yaml
+NEW_APP_NAME=${APP_NAME}.v${NEWVERSION}
+NEW_CSV=${NEW_VERSION_DIR}/${NEW_APP_NAME}.clusterserviceversion.yaml
 if [ -f "${NEW_CSV}" ]; then
   echo "The new csv already exists at ${NEW_CSV}"
   read -s -p "Overwrite it? [y/N] " RESPONSE
@@ -45,6 +46,9 @@ yq merge --overwrite --inplace ${NEW_CSV} $(dirname $0)/crd_patch.yaml
 
 # operator-sdk doesn't fill in the alm-example section. Add it.
 yq merge --overwrite --inplace ${NEW_CSV} $(dirname $0)/examples_patch.yaml
+
+# update the package to have the right version.
+yq write --inplace deploy/olm-catalog/perceptilabs-operator-beta/perceptilabs-operator-beta.package.yaml channels[0].currentCSV ${NEW_APP_NAME}
 
 # deploy/operator.yaml includes placeholders that need to be updated
 sed -i "" "s|'{{ REPLACE_IMAGE }}'|${IMG}:v${NEWVERSION}|g" ${NEW_CSV}
