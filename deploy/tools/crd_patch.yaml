@@ -1,0 +1,8 @@
+spec:
+  customresourcedefinitions:
+    owned:
+    - description: Placeholder description
+      displayName: Perceptilabs Operator
+      kind: Perceptilabs
+      name: perceptilabs.perceptilabs.com
+      version: v1alpha1

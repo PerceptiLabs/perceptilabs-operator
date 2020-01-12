@@ -40,6 +40,12 @@ popd
 # operator-sdk puts an extra placeholder namespace in. Remove it.
 yq delete --inplace ${NEW_CSV} metadata.namespace
 
+# operator-sdk doesn't fill in the customresourcedefinitions section. Add it.
+yq merge --overwrite --inplace ${NEW_CSV} $(dirname $0)/crd_patch.yaml
+
+# operator-sdk doesn't fill in the alm-example section. Add it.
+yq merge --overwrite --inplace ${NEW_CSV} $(dirname $0)/examples_patch.yaml
+
 # deploy/operator.yaml includes placeholders that need to be updated
 sed -i "" "s|'{{ REPLACE_IMAGE }}'|${IMG}:v${NEWVERSION}|g" ${NEW_CSV}
 sed -i "" "s/'{{ pull_policy.* }}'/Always/g" ${NEW_CSV}

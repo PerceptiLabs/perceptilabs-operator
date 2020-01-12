@@ -1,18 +1,11 @@
 # perceptilabs-operator
 
-## To Deploy the Operator Application to a Cluster
-
-1. Run this
-    ```
-    $ oc login <path to the cluster>
-    $ NAMESPACE=<your-namespace> make deploy
-    ```
-
 ## To Make a new operator version
 
 
 1. Install additional prerequisites
    * [operator-sdk](https://github.com/operator-framework/operator-sdk)
+     v0.13.0
    * `sed`
    * [yq](https://github.com/mikefarah/yq)
 1. Make it
@@ -27,6 +20,7 @@
     * [jq](https://stedolan.github.io/jq/download/)
     * `operator-courier` (installed with `pip install -r requirements.txt`)
     * [operator-sdk](https://github.com/operator-framework/operator-sdk)
+      v0.13.0
 1. Get and export the `QUAY_AUTH_TOKEN` environment variable using [these directions](https://github.com/operator-framework/operator-courier#authentication)
 1. Build, tag, and push it
       ```
