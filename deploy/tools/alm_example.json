@@ -1,0 +1,17 @@
+[
+  {
+    "apiVersion": "perceptilabs.com/v1alpha1",
+    "kind": "Perceptilabs",
+    "metadata": {
+      "name": "example-perceptilabs"
+    },
+    "spec": {
+      "coreImage": "perceptilabs.azurecr.io/core:latest",
+      "frontendImage": "perceptilabs.azurecr.io/frontend:latest",
+      "namespace": "your-namespace",
+      "corePvc": "perceptilabs-pvc",
+      "coreGpus": 0
+    }
+  }
+]
+

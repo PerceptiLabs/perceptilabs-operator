@@ -8,6 +8,7 @@
      v0.13.0
    * `sed`
    * [yq](https://github.com/mikefarah/yq)
+    * [jq](https://stedolan.github.io/jq/download/)
 1. Make it
     ```
     NEW_VERSION=x.y.z make make-new-version
