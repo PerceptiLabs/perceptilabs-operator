@@ -14,7 +14,7 @@ require-%:
 
 make-new-version: require-NEW_VERSION ## Create a new version of the operator
 	@${TOOLS_DIR}/make-new-version ${OPERATOR_VERSION} ${NEW_VERSION} ${OPERATOR_REPO} ${APP_NAME}
-	@read -p "Make sure you update the OPERATOR_VERSION in the Makefile [ok]"
+	@read -p "Make sure you update the OPERATOR_VERSION in the Makefile. Press Enter when complete."
 
 release: require-QUAY_AUTH_TOKEN ## Push the current version of the operator to the repos
 	@${TOOLS_DIR}/pre-check ${APP_REGISTRY_API}/${REGISTRY_ACCOUNT}/${APP_REPOSITORY} ${OPERATOR_VERSION}
