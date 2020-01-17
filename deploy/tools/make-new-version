@@ -56,6 +56,10 @@ yq write --inplace ${NEW_CSV} metadata.annotations.alm-examples ${example_json}
 # update the package to have the right version.
 yq write --inplace deploy/olm-catalog/perceptilabs-operator-beta/perceptilabs-operator-beta.package.yaml channels[0].currentCSV ${NEW_APP_NAME}
 
+patch_file=$(dirname $0)/description.md
+description=$(cat ${patch_file})
+yq write --inplace ${NEW_CSV} spec.description "${description}"
+
 # deploy/operator.yaml includes placeholders that need to be updated
 sed -i "" "s|'{{ REPLACE_IMAGE }}'|${IMG}:v${NEWVERSION}|g" ${NEW_CSV}
 sed -i "" "s/'{{ pull_policy.* }}'/Always/g" ${NEW_CSV}

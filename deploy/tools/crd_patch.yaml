@@ -1,7 +1,7 @@
 spec:
   customresourcedefinitions:
     owned:
-    - description: Placeholder description
+    - description: The PerceptiLabs Modelling tool
       displayName: Perceptilabs Operator
       kind: Perceptilabs
       name: perceptilabs.perceptilabs.com
