@@ -29,5 +29,5 @@
       ```
 
 1. If it's the first push to the repos, they need to be made public:
-    * Go to the application on the [quay website](https://quay.io/application/perceptilabs/perceptilabs-operator-beta?tab=settings) and make sure it's public.
+    * Go to the application on the [quay website](https://quay.io/application/perceptilabs/perceptilabs-operator-trial?tab=settings) and make sure it's public.
     * Do the same for the [repository](https://quay.io/repository/perceptilabs/perceptilabs-operator?tab=settings).

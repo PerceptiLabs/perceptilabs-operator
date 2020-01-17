@@ -44,9 +44,9 @@ spec:
             - name: OPERATOR_NAME
               value: "perceptilabs-operator"
             - name: RELATED_IMAGE_FRONTEND_IMAGE
-              value: "perceptilabs.azurecr.io/frontend:754"
+              value: "{{ REPLACE_FRONTEND_IMAGE }}"
             - name: RELATED_IMAGE_CORE_IMAGE
-              value: "perceptilabs.azurecr.io/core:754"
+              value: "{{ REPLACE_CORE_IMAGE }}"
       serviceAccountName: default
       imagePullSecrets:
       - name: perceptilabs-docker

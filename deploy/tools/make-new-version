@@ -1,22 +1,30 @@
 #!/usr/bin/env bash
 
-if [ $# -lt 4 ]; then
+if [ $# -lt 6 ]; then
   echo missing arguments
-  echo USAGE: $0 old-version new-version operator-image operator-app-name
+  echo USAGE: $0 old-version new-version operator-repo operator-app-name product-level images-version
+  echo Example: $0 0.0.3 0.0.4 quay.io/perceptilabs/perceptilabs-operator-trial perceptilabs-operator-trial trial 754
   exit 1
 fi
 
 OLDVERSION=$1
 NEWVERSION=$2
-IMG=$3
+OPERATOR_REPO=$3
 APP_NAME=$4
+PRODUCT_LEVEL=$5
+IMAGES_VERSION=$6
 
-APP_DIR=deploy/olm-catalog/${APP_NAME}
+APP_DIR=deploy/olm-catalog/${APP_NAME}                                                  # e.g. deploy/olm-catalog/perceptilabs-operator-trial
+NEW_VERSION_DIR=${APP_DIR}/${NEWVERSION}                                                # e.g. deploy/olm-catalog/perceptilabs-operator-trial/0.0.3
+NEW_APP_NAME=${APP_NAME}.v${NEWVERSION}                                                 # e.g. perceptilabs-operator-trial.v0.0.3
+NEW_CSV=${NEW_VERSION_DIR}/${NEW_APP_NAME}.clusterserviceversion.yaml                   # e.g. deploy/olm-catalog/perceptilabs-operator-trial/0.0.3/perceptilabs-operator-trial.v0.0.3
+CORE_IMAGE=quay.io/perceptilabs/core-${PRODUCT_LEVEL}-ubi7:${IMAGES_VERSION}            # e.g. quay.io/perceptilabs/core-trial-ubi7:123
+FRONTEND_IMAGE=quay.io/perceptilabs/frontend-${PRODUCT_LEVEL}-ubi8:${IMAGES_VERSION}    # e.g. quay.io/perceptilabs/frontend-trial-ubi8:123
+OLD_CSV=${APP_DIR}/${OLDVERSION}/${APP_NAME}.v${OLDVERSION}.clusterserviceversion.yaml  # e.g. deploy/olm-catalog/perceptilabs-operator-trial/0.0.2/perceptilabs-operator-trial.v0.0.2
+PACKAGE_FILE=${APP_DIR}/${APP_NAME}.package.yaml                                        # e.g. deploy/olm-catalog/perceptilabs-operator-trial/perceptilabs-operator-trial.package.yaml
+
 
 # Prevent accidental overwrites
-NEW_VERSION_DIR=${APP_DIR}/${NEWVERSION}
-NEW_APP_NAME=${APP_NAME}.v${NEWVERSION}
-NEW_CSV=${NEW_VERSION_DIR}/${NEW_APP_NAME}.clusterserviceversion.yaml
 if [ -f "${NEW_CSV}" ]; then
   echo "The new csv already exists at ${NEW_CSV}"
   read -s -p "Overwrite it? [y/N] " RESPONSE
@@ -24,14 +32,13 @@ if [ -f "${NEW_CSV}" ]; then
 fi
 
 # Insist on a previous version, since operator-sdk will happily work without one and make a mess
-OLD_CSV=${APP_DIR}/${OLDVERSION}/${APP_NAME}.v${OLDVERSION}.clusterserviceversion.yaml
 if [ ! -f ${OLD_CSV} ]; then
   echo "Old csv isn't there. Expected ${OLD_CSV} to exist"
   exit 1
 fi
 
 # some pre-build updates
-yq write --inplace deploy/olm-catalog/perceptilabs-operator-beta/perceptilabs-operator-beta.package.yaml channels[0].currentCSV ${NEW_APP_NAME}
+yq write --inplace ${PACKAGE_FILE} channels[0].currentCSV ${NEW_APP_NAME}
 
 # Make the version
 operator-sdk olm-catalog gen-csv --from-version=${OLDVERSION} --csv-version=${NEWVERSION} --operator-name=${APP_NAME}
@@ -49,20 +56,21 @@ patch_file=$(dirname $0)/crd_patch.yaml
 yq merge --overwrite --inplace ${NEW_CSV} ${patch_file}
 
 # operator-sdk doesn't fill in the alm-example section. Add it.
-patch_file=$(dirname $0)/alm_example.json
+patch_file=$(dirname $0)/alm_example_${PRODUCT_LEVEL}.json
 example_json=$(jq --compact-output . ${patch_file})
 yq write --inplace ${NEW_CSV} metadata.annotations.alm-examples ${example_json}
 
-# update the package to have the right version.
-yq write --inplace deploy/olm-catalog/perceptilabs-operator-beta/perceptilabs-operator-beta.package.yaml channels[0].currentCSV ${NEW_APP_NAME}
-
 patch_file=$(dirname $0)/description.md
 description=$(cat ${patch_file})
+
 yq write --inplace ${NEW_CSV} spec.description "${description}"
 
 # deploy/operator.yaml includes placeholders that need to be updated
-sed -i "" "s|'{{ REPLACE_IMAGE }}'|${IMG}:v${NEWVERSION}|g" ${NEW_CSV}
+sed -i "" "s|'{{ REPLACE_IMAGE }}'|${OPERATOR_REPO}:v${NEWVERSION}|g" ${NEW_CSV}
 sed -i "" "s/'{{ pull_policy.* }}'/Always/g" ${NEW_CSV}
+sed -i "" "s|'{{ REPLACE_CORE_IMAGE }}'|${CORE_IMAGE}|g" ${NEW_CSV}
+sed -i "" "s|'{{ REPLACE_FRONTEND_IMAGE }}'|${FRONTEND_IMAGE}|g" ${NEW_CSV}
 
 # we want the default service account. TODO: figure out why operator-sdk forces perceptilabs-operator in here
 sed -i "" "s/serviceAccountName.*$/serviceAccountName: default/g" ${NEW_CSV}
+

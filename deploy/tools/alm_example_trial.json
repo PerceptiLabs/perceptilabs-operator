@@ -1,0 +1,14 @@
+[
+  {
+    "apiVersion": "perceptilabs.com/v1alpha1",
+    "kind": "Perceptilabs",
+    "metadata": {
+      "name": "example-perceptilabs"
+    },
+    "spec": {
+      "namespace": "your-namespace",
+      "corePvc": "perceptilabs-pvc"
+    }
+  }
+]
+

@@ -1,4 +1,4 @@
-The PerceptiLabs opertator creates and maintains PerceptiLabs Modelling, a visual tool for building and training AI models.
+The PerceptiLabs operator creates and maintains PerceptiLabs Modelling, a visual tool for building and training AI models.
 For more information visit [perceptilabs.com](http://perceptilabs.com).
 
 # Features

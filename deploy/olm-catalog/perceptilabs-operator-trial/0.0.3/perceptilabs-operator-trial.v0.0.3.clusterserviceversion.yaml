@@ -18,7 +18,7 @@ metadata:
     createdAt: "2019-10-02T12:00:00Z"
     description: AI platform which lets you Build, Train and Analyze
     support: support@perceptilabs.com
-  name: perceptilabs-operator-beta.v0.0.3
+  name: perceptilabs-operator-trial.v0.0.3
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
@@ -173,10 +173,10 @@ spec:
   - name: PerceptiLabs Webpage
     url: https://perceptilabs.com
   maintainers:
-  - email: robert.l@perceptilabs.com
-    name: Robert Lundberg
+  - email: contact@perceptilabs.com
+    name: PerceptiLabs
   maturity: alpha
   provider:
     name: PerceptiLabs
-  replaces: perceptilabs-operator-beta.0.0.2
+  replaces: perceptilabs-operator-trial.0.0.2
   version: 0.0.3
