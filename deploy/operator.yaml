@@ -43,6 +43,10 @@ spec:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
               value: "perceptilabs-operator"
+            - name: RELATED_IMAGE_FRONTEND_IMAGE
+              value: "perceptilabs.azurecr.io/frontend:754"
+            - name: RELATED_IMAGE_CORE_IMAGE
+              value: "perceptilabs.azurecr.io/core:754"
       serviceAccountName: default
       imagePullSecrets:
       - name: perceptilabs-docker

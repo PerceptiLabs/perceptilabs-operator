@@ -1,6 +1,4 @@
 ---
 # defaults file for perceptilabs
-frontend_image: "perceptilabs.azurecr.io/frontend:latest"
-core_image: "perceptilabs.azurecr.io/core:latest"
 service_account_name: perceptilabs-operator
 perceptilabs_pull_secret: perceptilabs-docker
