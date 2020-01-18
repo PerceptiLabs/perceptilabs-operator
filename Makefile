@@ -19,8 +19,9 @@ make-new-version: require-OPERATOR_VERSION require-IMAGES_TAG require-PRODUCT_LE
 	${TOOLS_DIR}/make-new-version ${OPERATOR_VERSION} ${NEW_VERSION} ${OPERATOR_REPO} ${APP_NAME} ${PRODUCT_LEVEL} ${IMAGES_TAG}
 	echo ${NEW_VERSION} > ${VERSION_FILE}
 	echo ${IMAGES_TAG} > ${IMAGES_TAG_FILE}
+	@read -p "Make sure you commit your changes to git. Press enter when complete."
 
-release: require-QUAY_AUTH_TOKEN ## Push the current version of the operator to the repos
+publish: require-QUAY_AUTH_TOKEN ## Push the current version of the operator to the repos
 	@${TOOLS_DIR}/pre-check ${APP_REGISTRY_API}/${REGISTRY_ACCOUNT}/${APP_REPOSITORY} ${OPERATOR_VERSION}
 	@${TOOLS_DIR}/publish-to-quay ${PRODUCT_LEVEL} $(shell cat ${IMAGES_TAG_FILE} | tr -d '\n')
 	operator-sdk build ${OPERATOR_REPO}:v${OPERATOR_VERSION}
