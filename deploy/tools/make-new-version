@@ -45,7 +45,7 @@ operator-sdk olm-catalog gen-csv --from-version=${OLDVERSION} --csv-version=${NE
 
 # operator-courier checks that the crd is in the same directory as the csv. Link it there.
 pushd ${NEW_VERSION_DIR}
-ln -fs ../../../crds/perceptilabs_v1alpha1_perceptilabs_crd.yaml perceptilabs_v1alpha1_perceptilabs_crd.yaml
+ln -fs ../../../crds/perceptilabs_v1_perceptilabs_crd.yaml perceptilabs_v1_perceptilabs_crd.yaml
 popd
 
 # operator-sdk puts an extra placeholder namespace in. Remove it.

@@ -2,7 +2,7 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
   annotations:
-    alm-examples: '[{"apiVersion":"perceptilabs.com/v1alpha1",
+    alm-examples: '[{"apiVersion":"perceptilabs.com/v1",
                      "kind":"PerceptiLabs",
                      "metadata":{"name":"example-perceptilabs"},
                      "spec":{
@@ -27,7 +27,7 @@ spec:
       displayName: PerceptiLabs Operator
       kind: PerceptiLabs
       name: perceptilabs.perceptilabs.com
-      version: v1alpha1
+      version: v1
   description: Placeholder description
   displayName: PerceptiLabs Operator
   icon:

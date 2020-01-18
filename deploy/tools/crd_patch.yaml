@@ -5,4 +5,4 @@ spec:
       displayName: PerceptiLabs Trial
       kind: PerceptiLabs
       name: perceptilabs.perceptilabs.com
-      version: v1alpha1
+      version: v1
