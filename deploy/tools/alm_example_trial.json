@@ -1,7 +1,7 @@
 [
   {
     "apiVersion": "perceptilabs.com/v1alpha1",
-    "kind": "Perceptilabs",
+    "kind": "PerceptiLabs",
     "metadata": {
       "name": "example-perceptilabs"
     },

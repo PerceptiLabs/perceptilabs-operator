@@ -5,8 +5,8 @@ metadata:
 spec:
   group: perceptilabs.com
   names:
-    kind: Perceptilabs
-    listKind: PerceptilabsList
+    kind: PerceptiLabs
+    listKind: PerceptiLabsList
     plural: perceptilabs
     singular: perceptilabs
   scope: Namespaced

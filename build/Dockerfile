@@ -4,8 +4,8 @@ LABEL name="PerceptiLabs-Modeling-Operator" \
       vendor="PerceptiLabs" \
       version="1.0" \
       release="1" \
-      summary="This is the operator of the PerceptiLabs Modeling platform." \
-      description="This operator will deploy Perceptilabs Modelling to the cluster."
+      summary="This is the operator of the PerceptiLabs Modelling platform." \
+      description="This operator will deploy PerceptiLabs Modelling to the cluster."
 
 COPY licenses /licenses 
 
