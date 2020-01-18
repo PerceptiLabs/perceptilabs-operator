@@ -2,7 +2,7 @@ spec:
   customresourcedefinitions:
     owned:
     - description: The PerceptiLabs Modelling tool
-      displayName: PerceptiLabs Trial
+      displayName: PerceptiLabs
       kind: PerceptiLabs
       name: perceptilabs.perceptilabs.com
       version: v1

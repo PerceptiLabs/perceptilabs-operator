@@ -3,7 +3,7 @@
 if [ $# -lt 6 ]; then
   echo missing arguments
   echo USAGE: $0 old-version new-version operator-repo operator-app-name product-level images-version
-  echo Example: $0 0.0.3 0.0.4 quay.io/perceptilabs/perceptilabs-operator-trial perceptilabs-operator-trial trial 754
+  echo Example: $0 0.0.3 0.0.4 quay.io/perceptilabs/perceptilabs-operator-demo perceptilabs-operator-demo demo 754
   exit 1
 fi
 
@@ -14,14 +14,14 @@ APP_NAME=$4
 PRODUCT_LEVEL=$5
 IMAGES_VERSION=$6
 
-APP_DIR=deploy/olm-catalog/${APP_NAME}                                                  # e.g. deploy/olm-catalog/perceptilabs-operator-trial
-NEW_VERSION_DIR=${APP_DIR}/${NEWVERSION}                                                # e.g. deploy/olm-catalog/perceptilabs-operator-trial/0.0.3
-NEW_APP_NAME=${APP_NAME}.v${NEWVERSION}                                                 # e.g. perceptilabs-operator-trial.v0.0.3
-NEW_CSV=${NEW_VERSION_DIR}/${NEW_APP_NAME}.clusterserviceversion.yaml                   # e.g. deploy/olm-catalog/perceptilabs-operator-trial/0.0.3/perceptilabs-operator-trial.v0.0.3
-CORE_IMAGE=quay.io/perceptilabs/core-${PRODUCT_LEVEL}-ubi7:${IMAGES_VERSION}            # e.g. quay.io/perceptilabs/core-trial-ubi7:123
-FRONTEND_IMAGE=quay.io/perceptilabs/frontend-${PRODUCT_LEVEL}-ubi8:${IMAGES_VERSION}    # e.g. quay.io/perceptilabs/frontend-trial-ubi8:123
-OLD_CSV=${APP_DIR}/${OLDVERSION}/${APP_NAME}.v${OLDVERSION}.clusterserviceversion.yaml  # e.g. deploy/olm-catalog/perceptilabs-operator-trial/0.0.2/perceptilabs-operator-trial.v0.0.2
-PACKAGE_FILE=${APP_DIR}/${APP_NAME}.package.yaml                                        # e.g. deploy/olm-catalog/perceptilabs-operator-trial/perceptilabs-operator-trial.package.yaml
+APP_DIR=deploy/olm-catalog/${APP_NAME}                                                  # e.g. deploy/olm-catalog/perceptilabs-operator-demo
+NEW_VERSION_DIR=${APP_DIR}/${NEWVERSION}                                                # e.g. deploy/olm-catalog/perceptilabs-operator-demo/0.0.3
+NEW_APP_NAME=${APP_NAME}.v${NEWVERSION}                                                 # e.g. perceptilabs-operator-demo.v0.0.3
+NEW_CSV=${NEW_VERSION_DIR}/${NEW_APP_NAME}.clusterserviceversion.yaml                   # e.g. deploy/olm-catalog/perceptilabs-operator-demo/0.0.3/perceptilabs-operator-demo.v0.0.3
+CORE_IMAGE=quay.io/perceptilabs/core-${PRODUCT_LEVEL}-ubi7:${IMAGES_VERSION}            # e.g. quay.io/perceptilabs/core-demo-ubi7:123
+FRONTEND_IMAGE=quay.io/perceptilabs/frontend-${PRODUCT_LEVEL}-ubi8:${IMAGES_VERSION}    # e.g. quay.io/perceptilabs/frontend-demo-ubi8:123
+OLD_CSV=${APP_DIR}/${OLDVERSION}/${APP_NAME}.v${OLDVERSION}.clusterserviceversion.yaml  # e.g. deploy/olm-catalog/perceptilabs-operator-demo/0.0.2/perceptilabs-operator-demo.v0.0.2
+PACKAGE_FILE=${APP_DIR}/${APP_NAME}.package.yaml                                        # e.g. deploy/olm-catalog/perceptilabs-operator-demo/perceptilabs-operator-demo.package.yaml
 
 
 # Prevent accidental overwrites
@@ -52,7 +52,7 @@ popd
 yq delete --inplace ${NEW_CSV} metadata.namespace
 
 # operator-sdk doesn't fill in the customresourcedefinitions section. Add it.
-patch_file=$(dirname $0)/crd_patch.yaml
+patch_file=$(dirname $0)/crd_patch_${PRODUCT_LEVEL}.yaml
 yq merge --overwrite --inplace ${NEW_CSV} ${patch_file}
 
 # operator-sdk doesn't fill in the alm-example section. Add it.
