@@ -4,3 +4,5 @@ core_gpus: null
 core_pvc: null
 core_image: "{{ lookup('env', 'RELATED_IMAGE_CORE_IMAGE') }}"
 frontend_image: "{{ lookup('env', 'RELATED_IMAGE_FRONTEND_IMAGE') }}"
+license_name: null
+license_value: null

@@ -2,3 +2,5 @@
 # defaults file for perceptilabs
 service_account_name: perceptilabs-operator
 perceptilabs_pull_secret: perceptilabs-docker
+license_name: Demo
+license_value: Demo

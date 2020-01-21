@@ -1,3 +1,12 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: perceptilabs-license
+  namespace: {{ meta.namespace }}
+data:
+  LICENSE_NAME: {{ license_name or 'Demo' }}
+  LICENSE_VALUE: {{ license_value or 'Demo' }}
+---
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -22,6 +31,9 @@ spec:
       - name: core
         image: "{{ core_image }}"
         imagePullPolicy: IfNotPresent
+        envFrom:
+          - configMapRef:
+              name: perceptilabs-license
 {% if core_gpus %}
         resources:
           limits:
