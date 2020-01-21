@@ -11,7 +11,7 @@
 
 1. Make it
     ```
-    NEW_VERSION=0.0.7 PRODUCT_LEVEL=demo IMAGES_TAG=754 make make-new-version
+    NEW_VERSION=0.0.7 IMAGES_TAG=754 make make-new-version
     ```
 1. Some files will be modified. Commit them to source and push them.
 
@@ -27,8 +27,8 @@
 1. Get and export the `QUAY_AUTH_TOKEN` environment variable using [these directions](https://github.com/operator-framework/operator-courier#authentication)
 1. Publish the new version of the operator.
     ```
-    PRODUCT_LEVEL=demo make publish
+    make publish
     ```
 1. If it's the first push to the repos, they need to be made public:
-    * Go to the application on the [quay website](https://quay.io/application/perceptilabs/perceptilabs-operator-demo?tab=settings) and make sure it's public.
+    * Go to the application on the [quay website](https://quay.io/application/perceptilabs/perceptilabs-operator?tab=settings) and make sure it's public.
     * Do the same for the [repository](https://quay.io/repository/perceptilabs/perceptilabs-operator?tab=settings).

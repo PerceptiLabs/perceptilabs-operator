@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-if [ $# -lt 2 ]; then
-  echo "USAGE: $0 <product-level> <tag>"
+if [ $# -lt 1 ]; then
+  echo "USAGE: $0 <tag>"
   exit 1
 fi
 
-PRODUCT_LEVEL=$1
-TAG=$2
+TAG=$1
 
 do_copy(){
   docker pull ${SRC}
@@ -15,9 +14,9 @@ do_copy(){
 }
 
 SRC=perceptilabs.azurecr.io/core:${TAG}
-DEST=quay.io/perceptilabs/core-${PRODUCT_LEVEL}-ubi7:${TAG}
+DEST=quay.io/perceptilabs/core-ubi7:${TAG}
 do_copy
 
 SRC=perceptilabs.azurecr.io/frontend:${TAG}
-DEST=quay.io/perceptilabs/frontend-${PRODUCT_LEVEL}-ubi8:${TAG}
+DEST=quay.io/perceptilabs/frontend-ubi8:${TAG}
 do_copy
