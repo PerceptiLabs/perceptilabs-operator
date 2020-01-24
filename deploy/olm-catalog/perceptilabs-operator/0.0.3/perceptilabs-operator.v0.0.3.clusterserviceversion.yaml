@@ -17,7 +17,7 @@ metadata:
     containerImage: quay.io/perceptilabs/perceptilabs-operator
     createdAt: "2019-10-02T12:00:00Z"
     description: AI platform which lets you Build, Train and Analyze
-    support: contact@perceptilabs.com
+    support: support@perceptilabs.com
   name: perceptilabs-operator.v0.0.3
 spec:
   apiservicedefinitions: {}
@@ -173,7 +173,7 @@ spec:
   - name: PerceptiLabs Webpage
     url: https://perceptilabs.com
   maintainers:
-  - email: contact@perceptilabs.com
+  - email: support@perceptilabs.com
     name: PerceptiLabs
   maturity: alpha
   provider:
