@@ -16,13 +16,12 @@ steps:
     command: 'login'
     addPipelineData: false
 
-- script: docker login $REGISTRY -u $USERNAME -p $PASSWORD
-  displayName: Log in to the public registry
-
-- script: make publish
-  displayName: Publish the images to the public registry
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: Bash@3
+  env:
+    QUAY_AUTH_TOKEN: $(QUAY_AUTH_TOKEN)
+  inputs:
+    targetType: 'inline'
+    script: |
+      docker login $REGISTRY_URL -u $USERNAME -p $PASSWORD
+      make publish
+  displayName: Log in to the public registry and push the images
