@@ -21,7 +21,7 @@ CORE_IMAGE=quay.io/perceptilabs/core-ubi7:${IMAGES_VERSION}                     
 FRONTEND_IMAGE=quay.io/perceptilabs/frontend-ubi8:${IMAGES_VERSION}                    # e.g. quay.io/perceptilabs/frontend-ubi8:123
 OLD_CSV=${APP_DIR}/${OLDVERSION}/${APP_NAME}.v${OLDVERSION}.clusterserviceversion.yaml # e.g. deploy/olm-catalog/perceptilabs-operator/0.0.2/perceptilabs-operator.v0.0.2
 PACKAGE_FILE=${APP_DIR}/${APP_NAME}.package.yaml                                       # e.g. deploy/olm-catalog/perceptilabs-operator/perceptilabs-operator.package.yaml
-
+DOCKERFILE=build/Dockerfile
 
 # Prevent accidental overwrites
 if [ -f "${NEW_CSV}" ]; then
@@ -73,3 +73,5 @@ sed -i "" "s|'{{ REPLACE_FRONTEND_IMAGE }}'|${FRONTEND_IMAGE}|g" ${NEW_CSV}
 # we want the default service account. TODO: figure out why operator-sdk forces perceptilabs-operator in here
 sed -i "" "s/serviceAccountName.*$/serviceAccountName: default/g" ${NEW_CSV}
 
+# put the new version in the Dockerfile
+sed -i "" "s|version=.*$|version=\"${NEWVERSION}\" \\\|g" ${DOCKERFILE}
