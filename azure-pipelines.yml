@@ -1,0 +1,28 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: Docker@2
+  inputs:
+    containerRegistry: 'perceptilabs'
+    command: 'login'
+    addPipelineData: false
+
+- script: docker login $REGISTRY -u $USERNAME -p $PASSWORD
+  displayName: Log in to the public registry
+
+- script: make publish
+  displayName: Publish the images to the public registry
+
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
