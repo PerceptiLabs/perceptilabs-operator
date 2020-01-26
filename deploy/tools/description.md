@@ -117,6 +117,14 @@ spec:
 
 At this point two pods named 'perceptilabs-core-...' and 'perceptilabs-frontend-...` will start up in your namespace.
 
+## Copy data files to your cluster
+
+If you've use the persistent storage configuration from above, then you have a read-write volume mounted in the pod at `/mnt/plabs`. Copy your files there:
+
+```
+oc cp REPLACE_FILENAME --namespace=REPLACE_NAMESPACE REPLACE_CORE_POD_NAME:/mnt/plabs --container=core
+```
+
 ## Get the URL of your PerceptiLabs Modelling
 
 Once everything is up and running, you'll have two new routes in your namespace. Go to the routes for your namespace and follow the link named `perceptilabs-frontend`. Your browser will be running PerceptiLabs Modelling! Alternatively, you can get the URL from the command line:
