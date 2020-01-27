@@ -2,7 +2,7 @@ FROM quay.io/operator-framework/ansible-operator:v0.10.0
 
 LABEL name="PerceptiLabs-Modeling-Operator" \
       vendor="PerceptiLabs" \
-      version="1.0.3" \
+      version="1.0.4" \
       release="1" \
       summary="This is the operator of the PerceptiLabs Modelling tool." \
       description="This operator will deploy PerceptiLabs Modelling to the cluster."
