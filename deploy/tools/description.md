@@ -1,24 +1,39 @@
-The PerceptiLabs operator creates and maintains PerceptiLabs Modelling, a visual tool for building and training AI models.
+The PerceptiLabs operator creates and maintains PerceptiLabs, a visual tool modelling for machine learning at warp speed.
+
+PerceptiLabs visual modelling tool provides a GUI for building,
+training, and assessing your models, while also enabling deeper
+development with code. You get faster iterations and better
+explainability of your results.
+
+For more information visit [http://perceptilabs.com](http://perceptilabs.com).
 
 # Features
-* **Fast modeling**: With PerceptiLabs Modelling's simple interface, you can design your models quickly
-* **Increased transparency**: The statistical dashboard increases your model's transparency during training. Get instant feedback on your models' outputs.
-* **Flexibility**: Execute any custom Python code in the built-in code editor.
+
+**Fast modelling**  
+Make changes, debug, and tune your model through the GUI of custom code
+editor where every component/layer is reprogrammable. Choose from
+multiple neural network models as well as classical AI methods.
 
 
-For more information visit [perceptilabs.com](http://perceptilabs.com).
+**Transparency of Model Performance and Results**  
+Get instant feedback about your model's performance through the
+visualization of the architecture, to better review and understand the
+results. See real-time analytics in every operation and variable, and
+granular previews of output from each model component.
 
-This operator defaults to demo mode. It will train models on the CPU only. Contact us for licensing at contact@perceptilabs.com to experience fully GPU-enabled training.
+
+**Flexibility**  
+Customize your environment and statistics dashboard. Use high-level
+abstractions or low-level code. Execute any custom Python code or export
+a fully trained TensorFlow model to perform inference in your projects.
 
 
-# Installation Instructions
 
-For your convenience, we've included an example quickstart for running PerceptiLabs Modelling in demo mode.
+# Installation Instructions  
+For your convenience, we've included an example quickstart for running PerceptiLabs in demo mode.
 
-## Prepare your namespace
-
-Choose or create the namespace into which you'd like install PerceptiLabs Modelling. For example:
-
+## Prepare your namespace  
+Choose or create the namespace into which you'd like install PerceptiLabs. For example:  
 ```
 oc create namespace REPLACE_NAMESPACE
 ```
@@ -60,7 +75,7 @@ spec:
 
 ## Create the service account
 
-Choose or create a service account to run PerceptiLabs Modelling. If you want a new service account, create it like so:
+Choose or create a service account to run PerceptiLabs. If you want a new service account, create it like so:
 
 ```
 apiVersion: v1
@@ -99,7 +114,7 @@ spec:
 
 After this, you should see a `perceptilabs-operator` pod start up in your namespace. In that pod, the log for the `operator` container should eventually say "starting to serve".
 
-## Start a copy of PerceptiLabs Modelling
+## Start a copy of PerceptiLabs
 
 This is where you connect your storage and service account to a PerceptiLabs instance and run it. You can customize and apply the following configuration:
 
@@ -119,17 +134,18 @@ At this point two pods named 'perceptilabs-core-...' and 'perceptilabs-frontend-
 
 ## Copy data files to your cluster
 
-If you've use the persistent storage configuration from above, then you have a read-write volume mounted in the pod at `/mnt/plabs`. Copy your files there:
+If you've used the persistent storage configuration from above, then you have a read-write volume mounted in the pod at `/mnt/plabs`. Copy your files there:
 
 ```
 oc cp REPLACE_FILENAME --namespace=REPLACE_NAMESPACE REPLACE_CORE_POD_NAME:/mnt/plabs --container=core
 ```
 
-## Get the URL of your PerceptiLabs Modelling
+## Get the URL of your PerceptiLabs
 
-Once everything is up and running, you'll have two new routes in your namespace. Go to the routes for your namespace and follow the link named `perceptilabs-frontend`. Your browser will be running PerceptiLabs Modelling! Alternatively, you can get the URL from the command line:
+Once everything is up and running, you'll have two new routes in your namespace. Go to the routes for your namespace and follow the link named `perceptilabs-frontend`. Your browser will be connected to your instance of PerceptiLabs! Alternatively, you can get the URL from the command line:
 
 ```
 oc get routes --namespace REPLACE_NAMESPACE perceptilabs-frontend
 ```
+
 
