@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-if [ $# -lt 1 ]; then
-  echo "USAGE: $0 <tag>"
+if [ $# -lt 2 ]; then
+  echo "USAGE: $0 <tag> <version>"
   exit 1
 fi
 
 TAG=$1
+VERSION=$2
 
 do_copy(){
   docker pull ${SRC}
@@ -14,9 +15,9 @@ do_copy(){
 }
 
 SRC=perceptilabs.azurecr.io/core:${TAG}
-DEST=quay.io/perceptilabs/core-ubi7:${TAG}
+DEST=quay.io/perceptilabs/core-ubi7:${VERSION}
 do_copy
 
 SRC=perceptilabs.azurecr.io/frontend:${TAG}
-DEST=quay.io/perceptilabs/frontend-ubi8:${TAG}
+DEST=quay.io/perceptilabs/frontend-ubi8:${VERSION}
 do_copy

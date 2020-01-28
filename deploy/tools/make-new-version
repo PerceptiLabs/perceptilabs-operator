@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-if [ $# -lt 5 ]; then
+if [ $# -lt 4 ]; then
   echo missing arguments
-  echo USAGE: $0 old-version new-version operator-repo operator-app-name images-version
-  echo Example: $0 0.0.3 0.0.4 quay.io/perceptilabs/perceptilabs-operator perceptilabs-operator 754
+  echo USAGE: $0 old-version new-version operator-repo operator-app-name
+  echo Example: $0 0.0.3 0.0.4 quay.io/perceptilabs/perceptilabs-operator perceptilabs-operator
   exit 1
 fi
 
@@ -11,14 +11,13 @@ OLDVERSION=$1
 NEWVERSION=$2
 OPERATOR_REPO=$3
 APP_NAME=$4
-IMAGES_VERSION=$5
 
 APP_DIR=deploy/olm-catalog/${APP_NAME}                                                 # e.g. deploy/olm-catalog/perceptilabs-operator
 NEW_VERSION_DIR=${APP_DIR}/${NEWVERSION}                                               # e.g. deploy/olm-catalog/perceptilabs-operator/0.0.3
 NEW_APP_NAME=${APP_NAME}.v${NEWVERSION}                                                # e.g. perceptilabs-operator.v0.0.3
 NEW_CSV=${NEW_VERSION_DIR}/${NEW_APP_NAME}.clusterserviceversion.yaml                  # e.g. deploy/olm-catalog/perceptilabs-operator/0.0.3/perceptilabs-operator.v0.0.3
-CORE_IMAGE=quay.io/perceptilabs/core-ubi7:${IMAGES_VERSION}                            # e.g. quay.io/perceptilabs/core-ubi7:123
-FRONTEND_IMAGE=quay.io/perceptilabs/frontend-ubi8:${IMAGES_VERSION}                    # e.g. quay.io/perceptilabs/frontend-ubi8:123
+CORE_IMAGE=quay.io/perceptilabs/core-ubi7:${NEWVERSION}                                # e.g. quay.io/perceptilabs/core-ubi7:0.0.3
+FRONTEND_IMAGE=quay.io/perceptilabs/frontend-ubi8:${NEWVERSION}                        # e.g. quay.io/perceptilabs/frontend-ubi8:0.0.3
 OLD_CSV=${APP_DIR}/${OLDVERSION}/${APP_NAME}.v${OLDVERSION}.clusterserviceversion.yaml # e.g. deploy/olm-catalog/perceptilabs-operator/0.0.2/perceptilabs-operator.v0.0.2
 PACKAGE_FILE=${APP_DIR}/${APP_NAME}.package.yaml                                       # e.g. deploy/olm-catalog/perceptilabs-operator/perceptilabs-operator.package.yaml
 DOCKERFILE=build/Dockerfile
