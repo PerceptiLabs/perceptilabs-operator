@@ -15,16 +15,16 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-    - description: The PerceptiLabs Modelling tool
+    - description: The PerceptiLabs Modeling tool
       displayName: PerceptiLabs
       kind: PerceptiLabs
       name: perceptilabs.perceptilabs.com
       version: v1
   description: |-
-    The PerceptiLabs operator creates and maintains PerceptiLabs Modelling, a visual tool for building and training AI models.
+    The PerceptiLabs operator creates and maintains PerceptiLabs Modeling, a visual tool for building and training AI models.
 
     # Features
-    * **Fast modeling**: With PerceptiLabs Modelling's simple interface, you can design your models quickly
+    * **Fast modeling**: With PerceptiLabs Modeling's simple interface, you can design your models quickly
     * **Increased transparency**: The statistical dashboard increases your model's transparency during training. Get instant feedback on your models' outputs.
     * **Flexibility**: Execute any custom Python code in the built-in code editor.
 
@@ -36,11 +36,11 @@ spec:
 
     # Installation Instructions
 
-    For your convenience, we've included an example quickstart for running PerceptiLabs Modelling in demo mode.
+    For your convenience, we've included an example quickstart for running PerceptiLabs Modeling in demo mode.
 
     ## Prepare your namespace
 
-    Choose or create the namespace into which you'd like install PerceptiLabs Modelling. For example:
+    Choose or create the namespace into which you'd like install PerceptiLabs Modeling. For example:
 
     ```
     oc create namespace REPLACE_NAMESPACE
@@ -83,7 +83,7 @@ spec:
 
     ## Create the service account
 
-    Choose or create a service account to run PerceptiLabs Modelling. If you want a new service account, create it like so:
+    Choose or create a service account to run PerceptiLabs Modeling. If you want a new service account, create it like so:
 
     ```
     apiVersion: v1
@@ -122,7 +122,7 @@ spec:
 
     After this, you should see a `perceptilabs-operator` pod start up in your namespace. In that pod, the log for the `operator` container should eventually say "starting to serve".
 
-    ## Start a copy of PerceptiLabs Modelling
+    ## Start a copy of PerceptiLabs Modeling
 
     This is where you connect your storage and service account to a PerceptiLabs instance and run it. You can customize and apply the following configuration:
 
@@ -148,9 +148,9 @@ spec:
     oc cp REPLACE_FILENAME --namespace=REPLACE_NAMESPACE REPLACE_CORE_POD_NAME:/mnt/plabs --container=core
     ```
 
-    ## Get the URL of your PerceptiLabs Modelling
+    ## Get the URL of your PerceptiLabs Modeling
 
-    Once everything is up and running, you'll have two new routes in your namespace. Go to the routes for your namespace and follow the link named `perceptilabs-frontend`. Your browser will be running PerceptiLabs Modelling! Alternatively, you can get the URL from the command line:
+    Once everything is up and running, you'll have two new routes in your namespace. Go to the routes for your namespace and follow the link named `perceptilabs-frontend`. Your browser will be running PerceptiLabs Modeling! Alternatively, you can get the URL from the command line:
 
     ```
     oc get routes --namespace REPLACE_NAMESPACE perceptilabs-frontend

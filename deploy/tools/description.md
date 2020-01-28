@@ -1,6 +1,6 @@
-The PerceptiLabs operator creates and maintains PerceptiLabs, a visual tool modelling for machine learning at warp speed.
+The PerceptiLabs operator creates and maintains PerceptiLabs, a visual tool modeling for machine learning at warp speed.
 
-PerceptiLabs visual modelling tool provides a GUI for building,
+PerceptiLabs visual modeling tool provides a GUI for building,
 training, and assessing your models, while also enabling deeper
 development with code. You get faster iterations and better
 explainability of your results.
@@ -9,7 +9,7 @@ For more information visit [http://perceptilabs.com](http://perceptilabs.com).
 
 # Features
 
-**Fast modelling**  
+**Fast modeling**  
 Make changes, debug, and tune your model through the GUI of custom code
 editor where every component/layer is reprogrammable. Choose from
 multiple neural network models as well as classical AI methods.
