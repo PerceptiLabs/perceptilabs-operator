@@ -1,5 +1,5 @@
 channels:
-- currentCSV: perceptilabs-operator.v1.0.4
+- currentCSV: perceptilabs-operator.v1.0.5
   name: stable
 defaultChannel: stable
 packageName: perceptilabs-operator-package
