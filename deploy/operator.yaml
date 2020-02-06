@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: perceptilabs-operator
+  name: REPLACE_OP
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: perceptilabs-operator
+      name: REPLACE_OP
   template:
     metadata:
       labels:
-        name: perceptilabs-operator
+        name: REPLACE_OP
     spec:
       containers:
         - name: ansible
@@ -18,17 +18,15 @@ spec:
           - /usr/local/bin/ao-logs
           - /tmp/ansible-operator/runner
           - stdout
-          # Replace this with the built image name
-          image: "{{ REPLACE_IMAGE }}"
-          imagePullPolicy: "{{ pull_policy|default('Always') }}"
+          image: REPLACE_IMAGE
+          imagePullPolicy: Always
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
             name: runner
             readOnly: true
         - name: operator
-          # Replace this with the built image name
-          image: "{{ REPLACE_IMAGE }}"
-          imagePullPolicy: "{{ pull_policy|default('Always') }}"
+          image: REPLACE_IMAGE
+          imagePullPolicy: Always
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
             name: runner
@@ -42,14 +40,12 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
-              value: "perceptilabs-operator"
+              value: "REPLACE_OP"
             - name: RELATED_IMAGE_FRONTEND_IMAGE
-              value: "{{ REPLACE_FRONTEND_IMAGE }}"
+              value: "REPLACE_FRONTEND_IMAGE"
             - name: RELATED_IMAGE_CORE_IMAGE
-              value: "{{ REPLACE_CORE_IMAGE }}"
-      serviceAccountName: default
-      imagePullSecrets:
-      - name: perceptilabs-docker
+              value: "REPLACE_CORE_IMAGE"
+      serviceAccountName: perceptilabs-operator-sa
       volumes:
         - name: runner
           emptyDir: {}

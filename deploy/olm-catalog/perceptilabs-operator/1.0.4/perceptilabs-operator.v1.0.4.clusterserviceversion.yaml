@@ -209,8 +209,6 @@ spec:
                 volumeMounts:
                 - mountPath: /tmp/ansible-operator/runner
                   name: runner
-              imagePullSecrets:
-              - name: perceptilabs-docker
               serviceAccountName: default
               volumes:
               - emptyDir: {}

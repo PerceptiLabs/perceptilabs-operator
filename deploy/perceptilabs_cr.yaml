@@ -1,0 +1,7 @@
+apiVersion: perceptilabs.com/v1
+kind: PerceptiLabs
+metadata:
+  name: example-perceptilabs
+spec:
+  serviceAccountName: perceptilabs-operator-sa
+  corePvc: perceptilabs-pvc

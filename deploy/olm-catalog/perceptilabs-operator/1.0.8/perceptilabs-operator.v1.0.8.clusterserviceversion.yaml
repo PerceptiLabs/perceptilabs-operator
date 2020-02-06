@@ -6,7 +6,7 @@ metadata:
     capabilities: Basic Install
     categories: AI/Machine Learning
     certified: "false"
-    containerImage: quay.io/perceptilabs/perceptilabs-operator
+    containerImage: registry.connect.redhat.com/perceptilabs/modeling-operator-trial-1:1.0.8
     createdAt: "2019-10-02T12:00:00Z"
     description: AI platform which lets you Build, Train and Analyze
     support: support@perceptilabs.com
@@ -101,7 +101,7 @@ spec:
                 - /usr/local/bin/ao-logs
                 - /tmp/ansible-operator/runner
                 - stdout
-                image: quay.io/perceptilabs/perceptilabs-operator:1.0.8
+                image: registry.connect.redhat.com/perceptilabs/modeling-operator-trial-1:1.0.8
                 imagePullPolicy: Always
                 name: ansible
                 resources: {}
@@ -121,18 +121,16 @@ spec:
                 - name: OPERATOR_NAME
                   value: perceptilabs-operator
                 - name: RELATED_IMAGE_FRONTEND_IMAGE
-                  value: quay.io/perceptilabs/frontend-ubi8:1.0.8
+                  value: registry.connect.redhat.com/perceptilabs/modeling-frontend-trial-1:1.0.8
                 - name: RELATED_IMAGE_CORE_IMAGE
-                  value: quay.io/perceptilabs/core-ubi7:1.0.8
-                image: quay.io/perceptilabs/perceptilabs-operator:1.0.8
+                  value: registry.connect.redhat.com/perceptilabs/modeling-core-trial-1:1.0.8
+                image: registry.connect.redhat.com/perceptilabs/modeling-operator-trial-1:1.0.8
                 imagePullPolicy: Always
                 name: operator
                 resources: {}
                 volumeMounts:
                 - mountPath: /tmp/ansible-operator/runner
                   name: runner
-              imagePullSecrets:
-              - name: perceptilabs-docker
               serviceAccountName: default
               volumes:
               - emptyDir: {}

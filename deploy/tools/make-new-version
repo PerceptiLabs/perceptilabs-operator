@@ -7,11 +7,10 @@ if [ $# -lt 4 ]; then
   exit 1
 fi
 
-OLDVERSION=$1
-NEWVERSION=$2
-OPERATOR_REPO=$3
-APP_NAME=$4
-
+OLDVERSION=$1                                                                          # e.g. 1.0.0
+NEWVERSION=$2                                                                          # e.g. 1.0.1
+OPERATOR_REPO=$3                                                                       # e.g. quay.io/perceptilabs/perceptilabs-operator
+APP_NAME=$4                                                                            # e.g. perceptilabs-operator or perceptilabs-operator-trial
 APP_DIR=deploy/olm-catalog/${APP_NAME}                                                 # e.g. deploy/olm-catalog/perceptilabs-operator
 NEW_VERSION_DIR=${APP_DIR}/${NEWVERSION}                                               # e.g. deploy/olm-catalog/perceptilabs-operator/0.0.3
 NEW_APP_NAME=${APP_NAME}.v${NEWVERSION}                                                # e.g. perceptilabs-operator.v0.0.3
@@ -39,7 +38,7 @@ fi
 yq write --inplace ${PACKAGE_FILE} channels[0].currentCSV ${NEW_APP_NAME}
 
 # Make the version
-operator-sdk olm-catalog gen-csv --from-version=${OLDVERSION} --csv-version=${NEWVERSION} --operator-name=${APP_NAME}
+operator-sdk generate csv --from-version=${OLDVERSION} --csv-version=${NEWVERSION} --operator-name=${APP_NAME}
 
 # operator-courier checks that the crd is in the same directory as the csv. Link it there.
 pushd ${NEW_VERSION_DIR}
@@ -63,13 +62,14 @@ description=$(cat ${patch_file})
 
 yq write --inplace ${NEW_CSV} spec.description "${description}"
 
+# operator-sdk pulls in the contents of deploy/operator.yaml, but we have placeholders in there
 # deploy/operator.yaml includes placeholders that need to be updated
-sed -i "" "s|'{{ REPLACE_IMAGE }}'|${OPERATOR_REPO}:v${NEWVERSION}|g" ${NEW_CSV}
-sed -i "" "s/'{{ pull_policy.* }}'/Always/g" ${NEW_CSV}
-sed -i "" "s|'{{ REPLACE_CORE_IMAGE }}'|${CORE_IMAGE}|g" ${NEW_CSV}
-sed -i "" "s|'{{ REPLACE_FRONTEND_IMAGE }}'|${FRONTEND_IMAGE}|g" ${NEW_CSV}
+sed -i "" "s|REPLACE_IMAGE|${OPERATOR_REPO}:${NEWVERSION}|g" ${NEW_CSV}
+sed -i "" "s|REPLACE_CORE_IMAGE|${CORE_IMAGE}|g" ${NEW_CSV}
+sed -i "" "s|REPLACE_FRONTEND_IMAGE|${FRONTEND_IMAGE}|g" ${NEW_CSV}
+sed -i "" "s|REPLACE_OP|${APP_NAME}|g" ${NEW_CSV}
 
-# we want the default service account. TODO: figure out why operator-sdk forces perceptilabs-operator in here
+# we want the default service account.
 sed -i "" "s/serviceAccountName.*$/serviceAccountName: default/g" ${NEW_CSV}
 
 # put the new version in the Dockerfile

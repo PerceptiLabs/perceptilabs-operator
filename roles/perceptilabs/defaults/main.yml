@@ -1,5 +1,5 @@
 ---
 # defaults file for perceptilabs
-service_account_name: perceptilabs-operator
+service_account_name: default
 license_name: Demo
 license_value: Demo
