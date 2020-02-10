@@ -23,11 +23,11 @@ if [[ "${APP_NAME}" =~ "trial" ]]; then
   FE_REPO="${RH_REGISTRY}/modeling-frontend-trial-1"
   CORE_REPO_="${RH_REGISTRY}/modeling-core-trial-1"
 else
-  OP_REPO="${RH_REGISTRY}/perceptilabs-operator"
-  FE_REPO="${RH_REGISTRY}/modeling-frontend-1"
-  CORE_REPO_="${RH_REGISTRY}/modeling-core-1"
-  echo "The names of the containers for the full version are unknown"
-  exit 1
+  # OP_REPO="${RH_REGISTRY}/perceptilabs-operator"
+  # FE_REPO="${RH_REGISTRY}/modeling-frontend-1"
+  # CORE_REPO_="${RH_REGISTRY}/modeling-core-1"
+  echo "The names of the containers for the full version are unknown. Using quay.io repos."
+  # exit 1
 fi
 
 
@@ -37,9 +37,9 @@ mkdir ${DEST}
 cp ${PACKAGE_FILE} ${DEST}
 cp ${VERSIONED_DIR}/* ${DEST}
 pushd ${DEST}
-  sed -i "" "s|quay.io/perceptilabs/perceptilabs-operator|${OP_REPO}|g" *.clusterserviceversion.yaml
-  sed -i "" "s|quay.io/perceptilabs/frontend-ubi8|${FE_REPO}|g" *.clusterserviceversion.yaml
-  sed -i "" "s|quay.io/perceptilabs/core-ubi7|${CORE_REPO}|g" *.clusterserviceversion.yaml
+  # sed -i "" "s|quay.io/perceptilabs/perceptilabs-operator|${OP_REPO}|g" *.clusterserviceversion.yaml
+  # sed -i "" "s|quay.io/perceptilabs/frontend-ubi8|${FE_REPO}|g" *.clusterserviceversion.yaml
+  # sed -i "" "s|quay.io/perceptilabs/core-ubi7|${CORE_REPO}|g" *.clusterserviceversion.yaml
   zip -q temp.zip *
   mv temp.zip ../${DEST_LEAF}.zip
 popd
