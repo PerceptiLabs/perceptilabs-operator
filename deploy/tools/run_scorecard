@@ -33,6 +33,7 @@ yq w --inplace ${OPERATOR} 'spec.template.spec.containers.(name==operator).env.(
 yq w --inplace ${OPERATOR} 'spec.template.spec.containers.*.image' ${OP_IMAGE}
 yq w --inplace ${OPERATOR} 'spec.template.spec.serviceAccountName' perceptilabs-operator-sa
 
+# Set up the scorecard config
 CONFIG=${DEST}/.osdk-scorecard.yaml
 cat > ${CONFIG} <<EOF
 scorecard:
@@ -43,6 +44,7 @@ scorecard:
         crds-dir: "crds"
 EOF
 
+# Running the scorecard proxy container in the pod means it needs a service account beyond default. Set that up now.
 cat > ${DEST}/deploy/service_account.yaml <<EOF
 apiVersion: v1
 kind: ServiceAccount
@@ -50,9 +52,7 @@ metadata:
   name: perceptilabs-operator-sa
 EOF
 
-#failed to create or get service for metrics: services "perceptilabs-operator-trial-metrics" is forbidden: cannot set blockOwnerDeletion if an ownerReference refers to a resource you can't set finalizers on: , <nil>
-
-# Running with the scorecard proxy seems to require a lot of permissions that you don't normally need
+# Running with the scorecard proxy seems to require a lot of permissions that you don't normally need. Here they are.
 cat > ${DEST}/deploy/role.yaml <<EOF
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -127,6 +127,7 @@ rules:
   - '*'
 EOF
 sed -i "" "s|REPLACE_OPERATOR_NAME|${NAME}|g" ${DEST}/deploy/role.yaml
+
 
 cat > ${DEST}/deploy/role_binding.yaml <<EOF
 kind: RoleBinding

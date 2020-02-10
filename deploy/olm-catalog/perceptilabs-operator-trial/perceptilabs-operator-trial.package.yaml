@@ -1,5 +1,0 @@
-channels:
-- currentCSV: perceptilabs-operator-trial.v1.0.8
-  name: stable
-defaultChannel: stable
-packageName: perceptilabs-operator-trial-package

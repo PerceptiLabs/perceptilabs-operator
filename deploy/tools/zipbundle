@@ -3,7 +3,7 @@
 
 if [ $# -lt 2 ]; then
   echo "USAGE: $0 <app name> <version>"
-  echo "example: $0 perceptilabs-operator-trial 1.0.3"
+  echo "example: $0 perceptilabs-operator 1.0.3"
   exit 1
 fi
 
@@ -18,17 +18,11 @@ APP_DIR=${OLM_CATALOG_DIR}/${APP_NAME}
 PACKAGE_FILE=${APP_DIR}/${APP_NAME}.package.yaml
 VERSIONED_DIR=${APP_DIR}/${VERSION}
 RH_REGISTRY=registry.connect.redhat.com/perceptilabs
-if [[ "${APP_NAME}" =~ "trial" ]]; then
-  OP_REPO="${RH_REGISTRY}/modeling-operator-trial-1"
-  FE_REPO="${RH_REGISTRY}/modeling-frontend-trial-1"
-  CORE_REPO_="${RH_REGISTRY}/modeling-core-trial-1"
-else
-  # OP_REPO="${RH_REGISTRY}/perceptilabs-operator"
-  # FE_REPO="${RH_REGISTRY}/modeling-frontend-1"
-  # CORE_REPO_="${RH_REGISTRY}/modeling-core-1"
-  echo "The names of the containers for the full version are unknown. Using quay.io repos."
-  # exit 1
-fi
+OP_REPO="${RH_REGISTRY}/perceptilabs-operator"
+FE_REPO="${RH_REGISTRY}/perceptilabs-frontend-1"
+CORE_REPO="${RH_REGISTRY}/perceptilabs-core-1"
+echo "The names of the containers for the full version are unknown. Using quay.io repos."
+# exit 1
 
 
 rm -rf ${DEST}
@@ -37,9 +31,9 @@ mkdir ${DEST}
 cp ${PACKAGE_FILE} ${DEST}
 cp ${VERSIONED_DIR}/* ${DEST}
 pushd ${DEST}
-  # sed -i "" "s|quay.io/perceptilabs/perceptilabs-operator|${OP_REPO}|g" *.clusterserviceversion.yaml
-  # sed -i "" "s|quay.io/perceptilabs/frontend-ubi8|${FE_REPO}|g" *.clusterserviceversion.yaml
-  # sed -i "" "s|quay.io/perceptilabs/core-ubi7|${CORE_REPO}|g" *.clusterserviceversion.yaml
+  sed -i "" "s|quay.io/perceptilabs/perceptilabs-operator|${OP_REPO}|g" *.clusterserviceversion.yaml
+  sed -i "" "s|quay.io/perceptilabs/frontend-ubi8|${FE_REPO}|g" *.clusterserviceversion.yaml
+  sed -i "" "s|quay.io/perceptilabs/core-ubi7|${CORE_REPO}|g" *.clusterserviceversion.yaml
   zip -q temp.zip *
   mv temp.zip ../${DEST_LEAF}.zip
 popd
