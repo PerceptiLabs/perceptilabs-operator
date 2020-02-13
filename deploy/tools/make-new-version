@@ -71,6 +71,7 @@ sed -i "" "s|REPLACE_IMAGE|${OPERATOR_REPO}:${NEWVERSION}|g" ${NEW_CSV} || { exi
 sed -i "" "s|REPLACE_CORE_IMAGE|${CORE_IMAGE}|g" ${NEW_CSV} || { exit 1; }
 sed -i "" "s|REPLACE_FRONTEND_IMAGE|${FRONTEND_IMAGE}|g" ${NEW_CSV} || { exit 1; }
 sed -i "" "s|REPLACE_OP|${APP_NAME}|g" ${NEW_CSV} || { exit 1; }
+yq write --inplace ${NEW_CSV} metadata.annotations.containerImage ${OPERATOR_REPO}:${NEWVERSION}
 
 # we want the default service account.
 sed -i "" "s/serviceAccountName.*$/serviceAccountName: default/g" ${NEW_CSV} || { exit 1; }
