@@ -9,12 +9,17 @@ fi
 read -p "Here's a diff. If you find something you can't revert in there, then push ctrl-c and then q. Press enter to see the diff."
 git diff -- build/Dockerfile \
             deploy/olm-catalog/perceptilabs-operator/perceptilabs-operator.package.yaml \
+            operator_metadata_for_rh/yamls/perceptilabs-operator.package.yaml \
             images-tag \
             version
 
-ff "$(cat version)" | xargs rm -rf # TODO: use generic find 
+# Remove all files with VERSION in the name (except from git)
+VERSION=$(cat version)
+find . -name "*${VERSION}*" | grep -v ".git" | xargs rm -rf
 
+# revert the changed files
 git checkout build/Dockerfile \
             deploy/olm-catalog/perceptilabs-operator/perceptilabs-operator.package.yaml \
+            operator_metadata_for_rh/yamls/perceptilabs-operator.package.yaml \
             images-tag \
             version
