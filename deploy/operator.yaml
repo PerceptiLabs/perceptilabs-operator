@@ -45,7 +45,7 @@ spec:
               value: "REPLACE_FRONTEND_IMAGE"
             - name: RELATED_IMAGE_CORE_IMAGE
               value: "REPLACE_CORE_IMAGE"
-      serviceAccountName: perceptilabs-operator-sa
+      serviceAccountName: perceptilabs-operator
       volumes:
         - name: runner
           emptyDir: {}

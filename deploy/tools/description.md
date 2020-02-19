@@ -73,18 +73,6 @@ spec:
       storage: 50Gi
 ```
 
-## Create the service account
-
-Choose or create a service account to run PerceptiLabs. If you want a new service account, create it like so:
-
-```
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: REPLACE_SERVICEACCOUNT_NAME
-  namespace: REPLACE_NAMESPACE
-```
-
 ## Subscribe to the PerceptiLabs operator in your namespace
 
 If you're using the OpenShift console webpage, just click the Install button on this operator. If not, you can customize and apply this configuration:
@@ -125,7 +113,6 @@ metadata:
   name: example-perceptilabs
   namespace: REPLACE_NAMESPACE
 spec:
-  serviceAccountName: REPLACE_SERVICEACCOUNT_NAME
   namespace: REPLACE_NAMESPACE
   corePvc: REPLACE_PVC_NAME
 ```

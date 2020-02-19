@@ -31,7 +31,7 @@ yq w --inplace ${OPERATOR} 'spec.template.spec.containers.(name==operator).env.(
 yq w --inplace ${OPERATOR} 'spec.template.spec.containers.(name==operator).env.(name==RELATED_IMAGE_FRONTEND_IMAGE).value' ${FRONTEND_IMAGE}
 yq w --inplace ${OPERATOR} 'spec.template.spec.containers.(name==operator).env.(name==RELATED_IMAGE_CORE_IMAGE).value' ${CORE_IMAGE}
 yq w --inplace ${OPERATOR} 'spec.template.spec.containers.*.image' ${OP_IMAGE}
-yq w --inplace ${OPERATOR} 'spec.template.spec.serviceAccountName' perceptilabs-operator-sa
+yq w --inplace ${OPERATOR} 'spec.template.spec.serviceAccountName' perceptilabs-operator
 
 # Set up the scorecard config
 CONFIG=${DEST}/.osdk-scorecard.yaml
@@ -49,7 +49,7 @@ cat > ${DEST}/deploy/service_account.yaml <<EOF
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: perceptilabs-operator-sa
+  name: perceptilabs-operator
 EOF
 
 # Running with the scorecard proxy seems to require a lot of permissions that you don't normally need. Here they are.
@@ -136,7 +136,7 @@ metadata:
   name: perceptilabs
 subjects:
 - kind: ServiceAccount
-  name: perceptilabs-operator-sa
+  name: perceptilabs-operator
 roleRef:
   kind: Role
   name: perceptilabs-operator

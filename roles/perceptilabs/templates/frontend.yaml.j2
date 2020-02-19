@@ -17,7 +17,6 @@ spec:
     metadata:
       labels: *default-labels
     spec:
-      serviceAccountName: "{{ service_account_name }}"
       containers:
       - name: frontend
         image: "{{ frontend_image }}"

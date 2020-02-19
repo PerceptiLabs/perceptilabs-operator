@@ -3,5 +3,5 @@ kind: PerceptiLabs
 metadata:
   name: example-perceptilabs
 spec:
-  serviceAccountName: perceptilabs-operator-sa
+  serviceAccountName: perceptilabs-operator
   corePvc: perceptilabs-pvc
