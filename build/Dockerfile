@@ -1,4 +1,4 @@
-FROM quay.io/operator-framework/ansible-operator:v0.10.0
+FROM quay.io/operator-framework/ansible-operator:v0.15.1
 
 LABEL name="PerceptiLabs-Modeling-Operator" \
       vendor="PerceptiLabs" \
