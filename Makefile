@@ -30,7 +30,7 @@ publish-to-quay: require-QUAY_AUTH_TOKEN ## Push the current version of the oper
 	docker tag ${OPERATOR_REPO_URL}:v${RELEASE_VERSION} ${OPERATOR_REPO_URL}:${RELEASE_VERSION}
 	docker rmi ${OPERATOR_REPO_URL}:v${RELEASE_VERSION}
 	docker push ${OPERATOR_REPO_URL}:${RELEASE_VERSION}
-	# now push the different metadata info to the quay application repo
+	@# now push the different metadata info to the quay application repo
 	operator-courier --verbose push ${OLM_CATALOG_DIR}/${APP_NAME} ${REGISTRY_ACCOUNT} ${APP_REPOSITORY} ${RELEASE_VERSION} "${QUAY_AUTH_TOKEN}"
 
 submit-to-redhat: ## Submit docker images to scan.connect.redhat.com. (Does not upload the operator metadata, which is a manual step)
