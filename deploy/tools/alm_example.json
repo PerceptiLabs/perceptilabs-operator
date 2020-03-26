@@ -6,7 +6,6 @@
       "name": "example-perceptilabs"
     },
     "spec": {
-      "namespace": "your-namespace",
       "corePvc": "perceptilabs-pvc",
       "coreGpus": 0,
       "license_name": "demo",

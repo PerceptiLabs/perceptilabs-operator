@@ -113,7 +113,6 @@ metadata:
   name: example-perceptilabs
   namespace: REPLACE_NAMESPACE
 spec:
-  namespace: REPLACE_NAMESPACE
   corePvc: REPLACE_PVC_NAME
 ```
 
