@@ -38,7 +38,9 @@ publish-to-quay: require-QUAY_AUTH_TOKEN ## Push the current version of the oper
 
 submit-to-redhat: ## Submit docker images to scan.connect.redhat.com. (Does not upload the operator metadata, which is a manual step)
 	${TOOLS_DIR}/push-images-to-redhat ${RELEASE_VERSION}
-	@read -p "Manually upload the metadata at ${METADATA_FILE} to ${OP_METADATA_URL} [ok]"
+	@read -p "Manual Step: Tag the branch in the modeling tool with ${RELEASE_VERSION} [ok]"
+	@read -p "Manual Step: Click 'retain' on build #${IMAGES_TAG} of the modeling tool in the build pipeline [ok]"
+	@read -p "Manual Step: Upload the metadata at ${METADATA_FILE} to ${OP_METADATA_URL} [ok]"
 
 run-scorecard: ## Run operator scorecard in our cluster
 	${TOOLS_DIR}/run_scorecard ${RELEASE_VERSION} ${APP_NAME}

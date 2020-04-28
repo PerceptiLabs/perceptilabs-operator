@@ -43,6 +43,7 @@
     make submit-to-redhat
     ```
     ... this can take a while, depending on your internet connection.
+    It will prompt you to do some manual steps. These are important.
 
 1. Go to the RedHat "Certified Technology Portal" and make sure the
    new version shows up and that scans go smoothly:
