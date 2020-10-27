@@ -1,49 +1,44 @@
 APP_NAME          = perceptilabs-operator
-APP_REPOSITORY    = ${APP_NAME}-package
-APP_REGISTRY_API  = https://quay.io/cnr/api/v1/packages
-REGISTRY_ACCOUNT  = perceptilabs
-OPERATOR_REPO     = perceptilabs-operator
-OPERATOR_REPO_URL = quay.io/${REGISTRY_ACCOUNT}/${OPERATOR_REPO}
-VERSION_FILE      = version
-IMAGES_TAG_FILE   = images-tag
-RELEASE_VERSION   = $(shell cat ${VERSION_FILE} | tr -d '\n')
-OLM_CATALOG_DIR   = deploy/olm-catalog
-TOOLS_DIR         = deploy/tools
-METADATA_FILE     = "operator_metadata_for_rh/zips/perceptilabs-operator.${RELEASE_VERSION}.zip"
-OP_METADATA_URL   = "https://connect.redhat.com/project/2727121/operator-metadata"
+PROJECT_ROOT      = $(shell git rev-parse --show-toplevel)
+TOOLS_DIR         = ${PROJECT_ROOT}/deploy/tools
 
 require-%:
 	@: $(if ${${*}},,$(error You must set the $* environment variable))
 
-make-new-version: require-RELEASE_VERSION require-IMAGES_TAG require-NEW_VERSION ## Create a new version of the operator
-	${TOOLS_DIR}/make-new-version ${RELEASE_VERSION} ${NEW_VERSION} ${OPERATOR_REPO_URL} ${APP_NAME}
-	echo ${NEW_VERSION} > ${VERSION_FILE}
-	echo ${IMAGES_TAG} > ${IMAGES_TAG_FILE}
-	${TOOLS_DIR}/zipmetadata ${NEW_VERSION}
 	@read -p "Make sure you commit your changes to git. Press enter when complete."
 
-revert-new-version: ## Undo creation of a new version
-	@${TOOLS_DIR}/revert-new-version
+stage-for-quay:
+	${TOOLS_DIR}/stage-for-quay
 
-publish-to-quay: require-QUAY_AUTH_TOKEN ## Push the current version of the operator to the repos
-	@${TOOLS_DIR}/pre-check ${APP_REGISTRY_API}/${REGISTRY_ACCOUNT}/${APP_REPOSITORY} ${RELEASE_VERSION}
-	@${TOOLS_DIR}/publish-to-quay $(shell cat ${IMAGES_TAG_FILE} | tr -d '\n') ${RELEASE_VERSION}
-	@# operator-sdk insists on having a "v" prefix to the version, but that's at odds with the way we want to do versioning. Retag the image before pushing
-	operator-sdk build ${OPERATOR_REPO_URL}:v${RELEASE_VERSION}
-	docker tag ${OPERATOR_REPO_URL}:v${RELEASE_VERSION} ${OPERATOR_REPO_URL}:${RELEASE_VERSION}
-	docker rmi ${OPERATOR_REPO_URL}:v${RELEASE_VERSION}
-	docker push ${OPERATOR_REPO_URL}:${RELEASE_VERSION}
-	@# now push the different metadata info to the quay application repo
-	operator-courier --verbose push ${OLM_CATALOG_DIR}/${APP_NAME} ${REGISTRY_ACCOUNT} ${APP_REPOSITORY} ${RELEASE_VERSION} "${QUAY_AUTH_TOKEN}"
+build-for-quay: stage-for-quay
+	${TOOLS_DIR}/build-for-quay
+	@read -p "Make sure you commit your changes to git. Press enter when complete."
 
-submit-to-redhat: ## Submit docker images to scan.connect.redhat.com. (Does not upload the operator metadata, which is a manual step)
-	${TOOLS_DIR}/push-images-to-redhat ${RELEASE_VERSION}
-	@read -p "Manual Step: Tag the branch in the modeling tool with ${RELEASE_VERSION} [ok]"
-	@read -p "Manual Step: Click 'retain' on build #${IMAGES_TAG} of the modeling tool in the build pipeline [ok]"
-	@read -p "Manual Step: Upload the metadata at ${METADATA_FILE} to ${OP_METADATA_URL} [ok]"
+push-to-quay: build-for-quay
+	${TOOLS_DIR}/push-to-quay
 
-run-scorecard: ## Run operator scorecard in our cluster
-	${TOOLS_DIR}/run_scorecard ${RELEASE_VERSION} ${APP_NAME}
+# building the registry requires everything to be in quay
+build-registry-for-quay: push-to-quay
+	${TOOLS_DIR}/build-registry-for-quay
+
+quay: build-registry-for-quay
+
+stage-for-rh:
+	${TOOLS_DIR}/stage-for-rh
+
+build-for-rh: stage-for-rh
+	${TOOLS_DIR}/build-for-rh
+
+release-pl-images: build-for-rh
+	@${TOOLS_DIR}/push-images-to-rh "core-fe-op"
+
+release-bundle:
+	@${TOOLS_DIR}/push-images-to-rh "bundle"
+
+release: release-pl-images release-bundle
+
+# run-scorecard: ## Run operator scorecard in our cluster
+# 	${TOOLS_DIR}/run_scorecard ${RELEASE_VERSION} ${APP_NAME}
 
 .PHONY: make-new-version publish-to-quay submit-to-redhat help
 .DEFAULT_GOAL := help

@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+PROJECT_ROOT=$(git rev-parse --show-toplevel)
+source ${PROJECT_ROOT}/deploy/tools/variables
+
+assert_var(){
+  var=$1
+    if [ -z "${!var:-}" ]; then
+    echo "${var} isn't defined. Go to connect.redhat.com to get the value and then export the variable before running this script."
+    exit 1
+  fi
+}
+
+do_push(){
+  dest_tag=$1
+	pswd=$2
+	docker login -u unused -p ${pswd} ${SCAN_REGISTRY}
+	echo "Pushing ${dest_tag}"
+	docker push ${dest_tag}
+}
+
+# Make sure we have all of the passwords before trying
+# assert_var CORE_PWD
+assert_var FRONTEND_PWD
+assert_var OPERATOR_PWD
+assert_var BUNDLE_PWD
+
+if [ -z "$1" ]; then
+  echo "Missing command-line parameter"
+  exit 1
+elif [ "$1" == "core-fe-op" ]; then
+  do_push ${CORE_SCAN_TAG} ${CORE_PWD}
+  do_push ${FRONTEND_SCAN_TAG} ${FRONTEND_PWD}
+  do_push ${OPERATOR_SCAN_TAG} ${OPERATOR_PWD}
+  echo "Manual Step: Wait for scans of version ${CUR_VERSION} of the operator, core and frontend projects to succeed and then press enter"
+  echo "Frontend: ${FRONTEND_WEBPAGE}"
+  echo "Core: ${CORE_WEBPAGE}"
+  echo "Operator: ${OPERATOR_WEBPAGE}"
+  read -p "Press enter when the scans have passed."
+  read -p "Click \"publish\" on the new version of all three of the above projects. Press enter when complete"
+  echo "Checking that the images are available"
+  docker pull ${CORE_REPO_RH}:${CUR_VERSION}
+  docker pull ${FRONTEND_REPO_RH}:${CUR_VERSION}
+  docker pull ${OPERATOR_REPO_RH}:${CUR_VERSION}
+elif [ "$1" == "bundle" ]; then
+  echo "Releasing the bundle"
+  do_push ${BUNDLE_SCAN_TAG} ${BUNDLE_PWD}
+  @echo "Publish complete."
+  @echo "Manual step: wait for the scan of ${CUR_VERSION} of the operator bundle at ${BUNDLE_WEBPAGE}. Press enter when complete."
+	@read -p "Manual Step: Tag the branch in the modeling tool with ${RELEASE_VERSION} [ok]"
+	@read -p "Manual Step: Click 'retain' on build #${IMAGES_TAG} of the modeling tool in the build pipeline [ok]"
+fi

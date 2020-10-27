@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+PROJECT_ROOT=$(git rev-parse --show-toplevel)
+source ${PROJECT_ROOT}/deploy/tools/variables
+
+# Build the operator
+docker build ${PROJECT_ROOT} --file ${OPERATOR_DOCKERFILE} --tag ${OPERATOR_SCAN_TAG} --label "version=${CUR_VERSION}" --label "release=${CUR_OPERATOR_RELEASE}"
+
+# Build the bundle image
+docker build ${BUNDLE_CUR_VERSION_DIR_RH} --file ${BUNDLE_DOCKERFILE_RH} --tag=${BUNDLE_SCAN_TAG} --no-cache
+
+retag(){
+  src_tag=$1
+  dest_tag=$2
+	docker pull ${src_tag}
+	docker tag ${src_tag} ${dest_tag}
+}
+
+retag ${CORE_TAG_QUAY} ${CORE_SCAN_TAG}
+retag ${FRONTEND_TAG_QUAY} ${FRONTEND_SCAN_TAG}
+
+echo "The following images are staged for push to scan:"
+docker images | grep "${SCAN_REGISTRY}.*${CUR_VERSION}"

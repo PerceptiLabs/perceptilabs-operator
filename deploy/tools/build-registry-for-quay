@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+PROJECT_ROOT=$(git rev-parse --show-toplevel)
+source ${PROJECT_ROOT}/deploy/tools/variables
+
+# build a custom registry for later testing
+${OPM} index add --bundles ${PREV_BUNDLE_TAG_QUAY},${BUNDLE_TAG_QUAY} --tag ${REGISTRY_TAG_QUAY} --build-tool docker
+docker push ${REGISTRY_TAG_QUAY}
+${OPM} alpha bundle validate --tag ${BUNDLE_TAG_QUAY}
