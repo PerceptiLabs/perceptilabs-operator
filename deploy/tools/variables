@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+#######################
+# Constants
+APP_NAME=perceptilabs-operator
+
+# quay
+QUAY_ACCT=quay.io/perceptilabs
+BUNDLE_REPO_QUAY=quay.io/perceptilabs/perceptilabs-operator-bundle
+CORE_REPO_QUAY=quay.io/perceptilabs/core-ubi7
+FRONTEND_REPO_QUAY=quay.io/perceptilabs/frontend-ubi8
+OPERATOR_REPO_QUAY=quay.io/perceptilabs/perceptilabs-operator
+REGISTRY_REPO_QUAY=quay.io/perceptilabs/perceptilabs-operator-registry
+
+# Azure
+AZURE_ACCT=perceptilabs.azurecr.io
+CORE_REPO_AZURE=perceptilabs.azurecr.io/core
+FRONTEND_REPO_AZURE=perceptilabs.azurecr.io/frontend
+
+# Red Hat
+BUNDLE_REPO_RH=registry.connect.redhat.com/perceptilabs/perceptilabs-operator-bundle
+CORE_REPO_RH=registry.connect.redhat.com/perceptilabs/perceptilabs-core-1
+FRONTEND_REPO_RH=registry.connect.redhat.com/perceptilabs/perceptilabs-frontend-1
+OPERATOR_REPO_RH=registry.connect.redhat.com/perceptilabs/perceptilabs-operator
+
+SCAN_REGISTRY=scan.connect.redhat.com
+BUNDLE_SCAN_REPO=scan.connect.redhat.com/ospid-4461f832-2e46-4293-824a-b5202129288b/perceptilabs-operator-bundle
+CORE_SCAN_REPO=scan.connect.redhat.com/ospid-c5106ae3-19d7-4938-8d58-78789f1bf195/perceptilabs-core-1
+FRONTEND_SCAN_REPO=scan.connect.redhat.com/ospid-b7e10edb-0d6c-4222-9374-85874f0204a7/perceptilabs-frontend-1
+OPERATOR_SCAN_REPO=scan.connect.redhat.com/ospid-931b24cb-19a8-40a0-91ef-ba57f919ec30/perceptilabs-operator
+
+OPERATOR_WEBPAGE=https://connect.redhat.com/project/2727121/view
+CORE_WEBPAGE=https://connect.redhat.com/project/2727091/view
+FRONTEND_WEBPAGE=https://connect.redhat.com/project/2727111/view
+BUNDLE_WEBPAGE=https://connect.redhat.com/project/5892561/images
+
+#######################
+# Derived Constants
+
+PROJECT_ROOT=$(git rev-parse --show-toplevel)
+
+# Versions
+VERSIONS_FILE=${PROJECT_ROOT}/versions.yaml
+PREV_VERSION=$(yq read ${VERSIONS_FILE} 'versions(skip==false).number' | tail -n 2 | head -n 1)
+CUR_VERSION=$(yq read ${VERSIONS_FILE} 'versions(skip==false).number' | tail -n 1)
+CUR_OPERATOR_RELEASE=$(yq read ${VERSIONS_FILE} versions[-1].operator_release)
+CORE_VERSION_AZURE=$(yq read ${VERSIONS_FILE} versions[-1].azure_core_version)
+FRONTEND_VERSION_AZURE=$(yq read ${VERSIONS_FILE} versions[-1].azure_frontend_version)
+
+test -z "${CORE_VERSION_AZURE}" && {
+  echo "Core version in azure isn't set for release version ${CUR_VERSION}"
+  exit 1
+}
+test -z "${FRONTEND_VERSION_AZURE}" && {
+  echo "Frontend version in azure isn't set for release version ${CUR_VERSION}"
+  exit 1
+}
+
+# quay docker tags
+BUNDLE_TAG_QUAY=${BUNDLE_REPO_QUAY}:${CUR_VERSION}
+PREV_BUNDLE_TAG_QUAY=${BUNDLE_REPO_QUAY}:${PREV_VERSION}
+CORE_TAG_QUAY=${CORE_REPO_QUAY}:${CUR_VERSION}
+FRONTEND_TAG_QUAY=${FRONTEND_REPO_QUAY}:${CUR_VERSION}
+OPERATOR_TAG_QUAY=${OPERATOR_REPO_QUAY}:${CUR_VERSION}
+REGISTRY_TAG_QUAY=${REGISTRY_REPO_QUAY}:${CUR_VERSION}
+
+# Azure docker tags
+CORE_TAG_AZURE=${CORE_REPO_AZURE}:${CORE_VERSION_AZURE}
+FRONTEND_TAG_AZURE=${FRONTEND_REPO_AZURE}:${FRONTEND_VERSION_AZURE}
+
+# RH docker tags
+BUNDLE_TAG_RH=${BUNDLE_REPO_RH}:${CUR_VERSION}
+CORE_TAG_RH=${CORE_REPO_RH}:${CUR_VERSION}
+FRONTEND_TAG_RH=${FRONTEND_REPO_RH}:${CUR_VERSION}
+OPERATOR_TAG_RH=${OPERATOR_REPO_RH}:${CUR_VERSION}
+
+BUNDLE_SCAN_TAG=${BUNDLE_SCAN_REPO}:${CUR_VERSION}
+CORE_SCAN_TAG=${CORE_SCAN_REPO}:${CUR_VERSION}
+FRONTEND_SCAN_TAG=${FRONTEND_SCAN_REPO}:${CUR_VERSION}
+OPERATOR_SCAN_TAG=${OPERATOR_SCAN_REPO}:${CUR_VERSION}
+
+# Quay bundle file locations
+BUNDLE_DIR_QUAY=${PROJECT_ROOT}/bundle_quay
+BUNDLE_CUR_VERSION_DIR_QUAY=${BUNDLE_DIR_QUAY}/${CUR_VERSION}
+BUNDLE_PREV_VERSION_DIR_QUAY=${BUNDLE_DIR_QUAY}/${PREV_VERSION}
+BUNDLE_DOCKERFILE_QUAY=${BUNDLE_CUR_VERSION_DIR_QUAY}/Dockerfile
+
+# RH bundle file locations
+BUNDLE_DIR_RH=${PROJECT_ROOT}/bundle_rh
+BUNDLE_CUR_VERSION_DIR_RH=${BUNDLE_DIR_RH}/${CUR_VERSION}
+BUNDLE_PREV_VERSION_DIR_RH=${BUNDLE_DIR_RH}/${PREV_VERSION}
+BUNDLE_DOCKERFILE_RH=${BUNDLE_CUR_VERSION_DIR_RH}/Dockerfile
+
+# Operator dockerfile info
+OPERATOR_DOCKERFILE=${PROJECT_ROOT}/build/Dockerfile
+TOOLS_DIR=${PROJECT_ROOT}/deploy/tools
+
+#######################
+# Ensure opm installed
+
+OPERATOR_REGISTRY=${TOOLS_DIR}/operator-registry
+OPM=${OPERATOR_REGISTRY}/bin/opm
+
+test -d ${OPERATOR_REGISTRY} || {
+  pushd ${TOOLS_DIR}
+  git clone https://github.com/operator-framework/operator-registry
+  popd
+}
+
+test -f ${OPM} || {
+  pushd ${OPERATOR_REGISTRY}
+  make
+  popd
+}
+
+

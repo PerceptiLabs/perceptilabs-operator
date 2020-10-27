@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+PROJECT_ROOT=$(git rev-parse --show-toplevel)
+source ${PROJECT_ROOT}/deploy/tools/variables
+
+# Build the operator
+docker build ${PROJECT_ROOT} --file ${OPERATOR_DOCKERFILE} --tag ${OPERATOR_TAG_QUAY} --label "version=${CUR_VERSION}" --label "release=${CUR_OPERATOR_RELEASE}"
+
+# Build the bundle image
+docker build ${BUNDLE_CUR_VERSION_DIR_QUAY} --file ${BUNDLE_DOCKERFILE_QUAY} --tag=${BUNDLE_TAG_QUAY} --no-cache
+
+docker tag ${CORE_TAG_AZURE} ${CORE_TAG_QUAY}
+docker tag ${FRONTEND_TAG_AZURE} ${FRONTEND_TAG_QUAY}

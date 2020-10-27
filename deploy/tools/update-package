@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+PROJECT_ROOT=$(git rev-parse --show-toplevel)
+source ${PROJECT_ROOT}/deploy/tools/variables
+
+#TODO: what needs to go in the package yaml now with bundles instead of the metadata package
+
+
+# NEW_APP_NAME=${APP_NAME}.v${CUR_VERSION}
+# PACKAGE_FILE=${PROJECT_ROOT}/deploy/olm-catalog/${APP_NAME}/perceptilabs-operator.package.yaml
+# PACKAGE_NAME=perceptilabs-operator-package
+#
+# # Set up the package
+# yq write --inplace ${PACKAGE_FILE} channels[0].currentCSV ${NEW_APP_NAME}
+# yq write --inplace ${PACKAGE_FILE} packageName ${PACKAGE_NAME}

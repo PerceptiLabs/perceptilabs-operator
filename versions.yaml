@@ -1,0 +1,29 @@
+versions:
+  - number: 1.0.10
+    skip: true
+  - number: 1.0.11
+    skip: true
+  - number: 1.0.12
+    skip: true
+  - number: 1.0.13
+    skip: true
+  - number: 1.0.14
+    skip: true
+  - number: 1.0.15
+    skip: true
+  - number: 1.0.16
+    operator_release: 1
+    skip: false
+    azure_core_version: 1729
+    azure_frontend_version: 1729
+  - number: 1.0.17
+    skip: true
+  - number: 1.0.18
+    skip: true
+  - number: 1.0.19
+    skip: true
+  - number: 1.0.20
+    operator_release: 1
+    skip: false
+    azure_core_version: 1729
+    azure_frontend_version: 1729

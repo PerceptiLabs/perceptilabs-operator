@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# from https://github.com/operator-framework/operator-registry
+# TODO: assume opm is in PATH
+OPM=~/f/operator-registry/bin/opm
+OLDVERSION=$1                                                                            # e.g. 1.0.0
+NEWVERSION=$2                                                                            # e.g. 1.0.1
+OPERATOR_REPO=quay.io/perceptilabs/perceptilabs-operator
+BUNDLE_REPO=${OPERATOR_REPO}-bundle
+PROJ_ROOT=$(git rev-parse --show-toplevel)
+OLD_BUNDLE=${PROJ_ROOT}/bundle_quay/${OLDVERSION}
+NEW_BUNDLE=${PROJ_ROOT}/bundle_quay/${NEWVERSION}
+NEW_MANIFESTS=${NEW_BUNDLE}/manifests
+NEW_CSV=${NEW_MANIFESTS}/perceptilabs-operator.v${NEWVERSION}.clusterserviceversion.yaml
+CSV_PARTS_DIR=${PROJ_ROOT}/csv-parts
+DESCRIPTION=$(cat ${CSV_PARTS_DIR}/description.md)
+EXAMPLE_JSON=$(jq --compact-output . ${CSV_PARTS_DIR}/alm_example.json)
+CRD_PATCH=${CSV_PARTS_DIR}/crd_patch.yaml
+
+cat ${CSV_PARTS_DIR}/skips.yaml
+read -p "Is the above skip list complete? Press enter to continue or ctrl-c to quit"
+
+test -d ${OLD_BUNDLE} || {
+  echo "Error: the old version isn't present at ${OLD_BUNDLE}"
+  exit 1
+}
+
+# Prevent accidental overwrites
+test -d ${NEW_BUNDLE} && {
+  echo "Error: the new version is already present at ${NEW_BUNDLE}"
+  exit 1
+}
+
+# Assemble the directory structure
+cp -R ${OLD_BUNDLE} ${NEW_BUNDLE}
+mv ${NEW_MANIFESTS}/perceptilabs-operator.v${OLDVERSION}.clusterserviceversion.yaml ${NEW_CSV}
+
+## CSV Edits
+sed -i "" "s|${OLDVERSION}|${NEWVERSION}|g" ${NEW_CSV}
+yq write --inplace ${NEW_CSV} spec.replaces perceptilabs-operator.v${OLDVERSION}
+yq write --inplace ${NEW_CSV} spec.description "${DESCRIPTION}"
+yq delete --inplace ${NEW_CSV} metadata.namespace
+yq write --inplace ${NEW_CSV} metadata.annotations.alm-examples ${EXAMPLE_JSON}
+yq merge --overwrite --inplace ${NEW_CSV} ${CRD_PATCH}
+yq merge --inplace --overwrite ${NEW_CSV} ${CSV_PARTS_DIR}/skips.yaml
+yq write --inplace ${NEW_CSV} metadata.annotations.containerImage ${OPERATOR_REPO}:${NEWVERSION}
+#TODO: edit the docker image versions
+
+set -x
+
+BUNDLE_TAG=${BUNDLE_REPO}:${NEWVERSION}
+docker build ${NEW_BUNDLE} --tag=${BUNDLE_TAG} --no-cache
+docker push ${BUNDLE_TAG}
+${OPM} alpha bundle validate --tag ${BUNDLE_TAG}
