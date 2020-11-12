@@ -9,6 +9,7 @@ APP_NAME=perceptilabs-operator
 QUAY_ACCT=quay.io/perceptilabs
 BUNDLE_REPO_QUAY=quay.io/perceptilabs/perceptilabs-operator-bundle
 CORE_REPO_QUAY=quay.io/perceptilabs/core-ubi7
+RYGG_REPO_QUAY=quay.io/perceptilabs/rygg-ubi8
 FRONTEND_REPO_QUAY=quay.io/perceptilabs/frontend-ubi8
 OPERATOR_REPO_QUAY=quay.io/perceptilabs/perceptilabs-operator
 REGISTRY_REPO_QUAY=quay.io/perceptilabs/perceptilabs-operator-registry
@@ -17,6 +18,7 @@ REGISTRY_REPO_QUAY=quay.io/perceptilabs/perceptilabs-operator-registry
 AZURE_ACCT=perceptilabs.azurecr.io
 CORE_REPO_AZURE=perceptilabs.azurecr.io/core
 FRONTEND_REPO_AZURE=perceptilabs.azurecr.io/frontend
+RYGG_REPO_AZURE=perceptilabs.azurecr.io/rygg
 
 # Red Hat
 BUNDLE_REPO_RH=registry.connect.redhat.com/perceptilabs/perceptilabs-operator-bundle
@@ -48,6 +50,7 @@ CUR_VERSION=$(echo "${UNSKIPPED_VERSIONS}" | tail -n 1)
 CUR_OPERATOR_RELEASE=$(yq read ${VERSIONS_FILE} versions[-1].operator_release)
 CORE_VERSION_AZURE=$(yq read ${VERSIONS_FILE} versions[-1].azure_core_version)
 FRONTEND_VERSION_AZURE=$(yq read ${VERSIONS_FILE} versions[-1].azure_frontend_version)
+RYGG_VERSION_AZURE=$(yq read ${VERSIONS_FILE} versions[-1].azure_rygg_version)
 
 test -z "${CORE_VERSION_AZURE}" && {
   echo "Core version in azure isn't set for release version ${CUR_VERSION}"
@@ -62,6 +65,7 @@ test -z "${FRONTEND_VERSION_AZURE}" && {
 BUNDLE_TAG_QUAY=${BUNDLE_REPO_QUAY}:${CUR_VERSION}
 PREV_BUNDLE_TAG_QUAY=${BUNDLE_REPO_QUAY}:${PREV_VERSION}
 CORE_TAG_QUAY=${CORE_REPO_QUAY}:${CUR_VERSION}
+RYGG_TAG_QUAY=${RYGG_REPO_QUAY}:${CUR_VERSION}
 FRONTEND_TAG_QUAY=${FRONTEND_REPO_QUAY}:${CUR_VERSION}
 OPERATOR_TAG_QUAY=${OPERATOR_REPO_QUAY}:${CUR_VERSION}
 REGISTRY_TAG_QUAY=${REGISTRY_REPO_QUAY}:${CUR_VERSION}
@@ -79,6 +83,7 @@ done
 # Azure docker tags
 CORE_TAG_AZURE=${CORE_REPO_AZURE}:${CORE_VERSION_AZURE}
 FRONTEND_TAG_AZURE=${FRONTEND_REPO_AZURE}:${FRONTEND_VERSION_AZURE}
+RYGG_TAG_AZURE=${RYGG_REPO_AZURE}:${RYGG_VERSION_AZURE}
 
 # RH docker tags
 BUNDLE_TAG_RH=${BUNDLE_REPO_RH}:${CUR_VERSION}

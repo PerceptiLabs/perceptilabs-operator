@@ -50,4 +50,5 @@ yq write --inplace ${NEW_CSV} metadata.annotations.containerImage ${OPERATOR_TAG
 # pull core/frontend images from azure
 docker pull ${FRONTEND_TAG_AZURE}
 docker pull ${CORE_TAG_AZURE}
+docker pull ${RYGG_TAG_AZURE}
 

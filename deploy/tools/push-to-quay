@@ -9,6 +9,7 @@ source ${PROJECT_ROOT}/deploy/tools/variables
 # Publish to quay
 
 docker push ${CORE_TAG_QUAY}
+docker push ${RYGG_TAG_QUAY}
 docker push ${FRONTEND_TAG_QUAY}
 docker push ${OPERATOR_TAG_QUAY}
 docker push ${BUNDLE_TAG_QUAY}

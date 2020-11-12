@@ -27,3 +27,9 @@ versions:
     skip: false
     azure_core_version: 1729
     azure_frontend_version: 1729
+  - number: 1.0.21
+    operator_release: 1
+    skip: false
+    azure_core_version: 1729
+    azure_frontend_version: 1729
+    azure_rygg_version: 4062
