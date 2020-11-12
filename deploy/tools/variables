@@ -42,8 +42,9 @@ PROJECT_ROOT=$(git rev-parse --show-toplevel)
 
 # Versions
 VERSIONS_FILE=${PROJECT_ROOT}/versions.yaml
-PREV_VERSION=$(yq read ${VERSIONS_FILE} 'versions(skip==false).number' | tail -n 2 | head -n 1)
-CUR_VERSION=$(yq read ${VERSIONS_FILE} 'versions(skip==false).number' | tail -n 1)
+UNSKIPPED_VERSIONS=$(yq read $VERSIONS_FILE 'versions(skip==false).number')
+PREV_VERSION=$(echo "${UNSKIPPED_VERSIONS}" | tail -n 2 | head -n 1)
+CUR_VERSION=$(echo "${UNSKIPPED_VERSIONS}" | tail -n 1)
 CUR_OPERATOR_RELEASE=$(yq read ${VERSIONS_FILE} versions[-1].operator_release)
 CORE_VERSION_AZURE=$(yq read ${VERSIONS_FILE} versions[-1].azure_core_version)
 FRONTEND_VERSION_AZURE=$(yq read ${VERSIONS_FILE} versions[-1].azure_frontend_version)
@@ -64,6 +65,16 @@ CORE_TAG_QUAY=${CORE_REPO_QUAY}:${CUR_VERSION}
 FRONTEND_TAG_QUAY=${FRONTEND_REPO_QUAY}:${CUR_VERSION}
 OPERATOR_TAG_QUAY=${OPERATOR_REPO_QUAY}:${CUR_VERSION}
 REGISTRY_TAG_QUAY=${REGISTRY_REPO_QUAY}:${CUR_VERSION}
+
+BUNDLES_QUAY=""
+for TAG in $UNSKIPPED_VERSIONS; do
+  CUR="$BUNDLE_REPO_QUAY:$TAG"
+  if [ -z "$BUNDLES_QUAY" ]; then
+    BUNDLES_QUAY=$CUR
+  else
+    BUNDLES_QUAY="$BUNDLES_QUAY,$CUR"
+  fi
+done
 
 # Azure docker tags
 CORE_TAG_AZURE=${CORE_REPO_AZURE}:${CORE_VERSION_AZURE}
