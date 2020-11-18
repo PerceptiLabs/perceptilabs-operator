@@ -114,6 +114,7 @@ metadata:
   namespace: REPLACE_NAMESPACE
 spec:
   corePvc: REPLACE_PVC_NAME
+  ryggPvc: REPLACE_PVC_NAME
 ```
 
 At this point two pods named 'perceptilabs-core-...' and 'perceptilabs-frontend-...` will start up in your namespace.

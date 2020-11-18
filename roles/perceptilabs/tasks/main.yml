@@ -1,5 +1,10 @@
 ---
-- name: Deploy PerceptiLabs backend microservice (core)
+- name: Deploy PerceptiLabs API microservice (rygg)
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'rygg.yaml.j2') }}"
+
+- name: Deploy PerceptiLabs ML microservice (core)
   k8s:
     state: present
     definition: "{{ lookup('template', 'core.yaml.j2') }}"

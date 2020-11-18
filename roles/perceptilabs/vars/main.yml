@@ -2,7 +2,9 @@
 # vars file for perceptilabs
 core_gpus: null
 core_pvc: null
+rygg_pvc: null
 core_image: "{{ lookup('env', 'RELATED_IMAGE_CORE_IMAGE') }}"
+rygg_image: "{{ lookup('env', 'RELATED_IMAGE_RYGG_IMAGE') }}"
 frontend_image: "{{ lookup('env', 'RELATED_IMAGE_FRONTEND_IMAGE') }}"
 license_name: null
 license_value: null

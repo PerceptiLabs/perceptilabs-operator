@@ -1,0 +1,71 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: perceptilabs-license
+  namespace: {{ meta.namespace }}
+data:
+  LICENSE_NAME: {{ license_name or 'Demo' }}
+  LICENSE_VALUE: {{ license_value or 'Demo' }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: perceptilabs-rygg
+  namespace: {{ meta.namespace }}
+  labels: &default-labels
+    app.kubernetes.io/name: perceptilabs-rygg
+    app.kubernetes.io/version: v1.0.0-v1alpha1
+    app: perceptilabs
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *default-labels
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: *default-labels
+    spec:
+      containers:
+      - name: rygg
+        image: "{{ rygg_image }}"
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DB
+          value: default
+        envFrom:
+          - configMapRef:
+              name: perceptilabs-license
+{% if rygg_pvc %}
+        volumeMounts:
+        - mountPath: /mnt/plabs
+          name: rygg-data-volume
+      volumes:
+      - name: rygg-data-volume
+        persistentVolumeClaim:
+          claimName: "{{ rygg_pvc }}"
+{% endif %}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: perceptilabs-rygg
+  namespace: {{ meta.namespace }}
+spec:
+  selector:
+    app.kubernetes.io/name: perceptilabs-rygg
+    app.kubernetes.io/version: v1.0.0-v1alpha1
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: perceptilabs-rygg
+  namespace: {{ meta.namespace }}
+spec:
+  to:
+    kind: Service
+    name: perceptilabs-rygg
