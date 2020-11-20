@@ -11,44 +11,65 @@ DESCRIPTION=$(cat ${CSV_PARTS_DIR}/description.md)
 EXAMPLE_JSON=$(jq --compact-output . ${CSV_PARTS_DIR}/alm_example.json)
 CRD_PATCH=${CSV_PARTS_DIR}/crd_patch.yaml
 
+function remove_bundle(){
+  rm -rf ${BUNDLE_CUR_VERSION_DIR_QUAY}
+}
+
+function build_csv(){
+  echo "Creating new version ${CUR_VERSION} based on version ${PREV_VERSION}"
+
+  skip_pattern="versions(skip==true).number"
+  skip_list=$(yq read ${VERSIONS_FILE} $skip_pattern | awk '{print "  - perceptilabs-operator.v" $0}')
+  skip_section="spec:
+    skips:
+  ${skip_list}
+  "
+
+  # Assemble the directory structure
+  cp -R ${BUNDLE_PREV_VERSION_DIR_QUAY} ${BUNDLE_CUR_VERSION_DIR_QUAY}
+  mv ${NEW_MANIFESTS}/perceptilabs-operator.v${PREV_VERSION}.clusterserviceversion.yaml ${NEW_CSV}
+
+  ## CSV Edits
+  sed -i "" "s|${PREV_VERSION}|${CUR_VERSION}|g" ${NEW_CSV}
+  yq write --inplace ${NEW_CSV} spec.replaces perceptilabs-operator.v${PREV_VERSION}
+  yq write --inplace ${NEW_CSV} spec.description "${DESCRIPTION}"
+  yq delete --inplace ${NEW_CSV} metadata.namespace
+  yq write --inplace ${NEW_CSV} metadata.annotations.alm-examples ${EXAMPLE_JSON}
+  yq merge --overwrite --inplace ${NEW_CSV} ${CRD_PATCH}
+  echo "$skip_section" | yq merge --overwrite --inplace --overwrite ${NEW_CSV} -
+  yq write --inplace ${NEW_CSV} metadata.annotations.containerImage ${OPERATOR_TAG_QUAY}
+
+}
+
 test -d ${BUNDLE_PREV_VERSION_DIR_QUAY} || {
   echo "Error: the old version isn't present at ${BUNDLE_PREV_VERSION_DIR_QUAY}"
   exit 1
 }
 
+BUILD_CSV=1
+
 # Prevent accidental overwrites
-test -d ${BUNDLE_CUR_VERSION_DIR_QUAY} && {
+if [ -d ${BUNDLE_CUR_VERSION_DIR_QUAY} ]; then
   echo "The new version already exists at ${BUNDLE_CUR_VERSION_DIR_QUAY}"
-  read -s -p "Overwrite it? [y/N] " RESPONSE
-  test "${RESPONSE}" != "y" && { echo "Stopping."; exit 1; }
-  rm -rf ${BUNDLE_CUR_VERSION_DIR_QUAY}
-}
+  read -s -p "[o]verwrite? a[z]ure images only? [q]uit? " RESPONSE
+  echo
 
-echo "Creating new version ${CUR_VERSION} based on version ${PREV_VERSION}"
+  if [ "${RESPONSE}" == "o" ]; then
+    remove_bundle
+  elif [ "${RESPONSE}" == "z" ]; then
+    BUILD_CSV=
+  else
+    echo "Stopping."
+    exit 1
+  fi
+fi
 
-skip_pattern="versions(skip==true).number"
-skip_list=$(yq read ${VERSIONS_FILE} $skip_pattern | awk '{print "  - perceptilabs-operator.v" $0}')
-skip_section="spec:
-  skips:
-${skip_list}
-"
-
-# Assemble the directory structure
-cp -R ${BUNDLE_PREV_VERSION_DIR_QUAY} ${BUNDLE_CUR_VERSION_DIR_QUAY}
-mv ${NEW_MANIFESTS}/perceptilabs-operator.v${PREV_VERSION}.clusterserviceversion.yaml ${NEW_CSV}
-
-## CSV Edits
-sed -i "" "s|${PREV_VERSION}|${CUR_VERSION}|g" ${NEW_CSV}
-yq write --inplace ${NEW_CSV} spec.replaces perceptilabs-operator.v${PREV_VERSION}
-yq write --inplace ${NEW_CSV} spec.description "${DESCRIPTION}"
-yq delete --inplace ${NEW_CSV} metadata.namespace
-yq write --inplace ${NEW_CSV} metadata.annotations.alm-examples ${EXAMPLE_JSON}
-yq merge --overwrite --inplace ${NEW_CSV} ${CRD_PATCH}
-echo "$skip_section" | yq merge --overwrite --inplace --overwrite ${NEW_CSV} -
-yq write --inplace ${NEW_CSV} metadata.annotations.containerImage ${OPERATOR_TAG_QUAY}
+if [ ! -z ${BUILD_CSV} ]; then
+  build_csv
+fi
 
 # pull core/frontend images from azure
 docker pull ${FRONTEND_TAG_AZURE}
-docker pull ${CORE_TAG_AZURE}
+docker pull ${KERNEL_TAG_AZURE}
 docker pull ${RYGG_TAG_AZURE}
 

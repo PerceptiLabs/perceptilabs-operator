@@ -32,7 +32,9 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: DB
-          value: default
+          value: "default"
+        - name: CORS_WHITELIST
+          value: "http://perceptilabs-frontend-a2.apps.os5.perceptilabshosting.com"
         envFrom:
           - configMapRef:
               name: perceptilabs-license
