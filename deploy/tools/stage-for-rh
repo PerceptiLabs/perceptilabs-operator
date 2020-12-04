@@ -6,8 +6,9 @@ source ${PROJECT_ROOT}/deploy/tools/variables
 
 NEW_MANIFESTS=${BUNDLE_CUR_VERSION_DIR_RH}/manifests
 NEW_CSV=${NEW_MANIFESTS}/perceptilabs-operator.v${CUR_VERSION}.clusterserviceversion.yaml
-echo TODO First check that the version diffs from quay by only the last one
-echo TODO: copy latest version from quay bundle dir.
+# TODO: automate the next line
+read -s -p "First check that the version diffs from quay by only the last one. Press enter when complete." IGNORED_RESPONSE
+echo
 
 # Prevent accidental overwrites
 test -d ${BUNDLE_CUR_VERSION_DIR_RH} && {
@@ -21,5 +22,6 @@ test -d ${BUNDLE_CUR_VERSION_DIR_RH} && {
 cp -R ${BUNDLE_CUR_VERSION_DIR_QUAY} ${BUNDLE_CUR_VERSION_DIR_RH}
 
 sed -i "" "s|${OPERATOR_REPO_QUAY}|${OPERATOR_REPO_RH}|g" ${NEW_CSV}
+sed -i "" "s|${RYGG_REPO_QUAY}|${RYGG_REPO_RH}|g" ${NEW_CSV}
 sed -i "" "s|${FRONTEND_REPO_QUAY}|${FRONTEND_REPO_RH}|g" ${NEW_CSV}
 sed -i "" "s|${CORE_REPO_QUAY}|${CORE_REPO_RH}|g" ${NEW_CSV}

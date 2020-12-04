@@ -19,6 +19,7 @@ retag(){
 
 retag ${CORE_TAG_QUAY} ${CORE_SCAN_TAG}
 retag ${FRONTEND_TAG_QUAY} ${FRONTEND_SCAN_TAG}
+retag ${RYGG_TAG_QUAY} ${RYGG_SCAN_TAG}
 
 echo "The following images are staged for push to scan:"
 docker images | grep "${SCAN_REGISTRY}.*${CUR_VERSION}"

@@ -24,6 +24,7 @@ do_push(){
 # assert_var CORE_PWD
 assert_var FRONTEND_PWD
 assert_var OPERATOR_PWD
+assert_var RYGG_PWD
 assert_var BUNDLE_PWD
 
 if [ -z "$1" ]; then
@@ -33,21 +34,27 @@ elif [ "$1" == "core-fe-op" ]; then
   do_push ${CORE_SCAN_TAG} ${CORE_PWD}
   do_push ${FRONTEND_SCAN_TAG} ${FRONTEND_PWD}
   do_push ${OPERATOR_SCAN_TAG} ${OPERATOR_PWD}
+  do_push ${RYGG_SCAN_TAG} ${RYGG_PWD}
   echo "Manual Step: Wait for scans of version ${CUR_VERSION} of the operator, core and frontend projects to succeed and then press enter"
   echo "Frontend: ${FRONTEND_WEBPAGE}"
   echo "Core: ${CORE_WEBPAGE}"
   echo "Operator: ${OPERATOR_WEBPAGE}"
+  echo "Operator: ${RYGG_WEBPAGE}"
   read -p "Press enter when the scans have passed."
   read -p "Click \"publish\" on the new version of all three of the above projects. Press enter when complete"
   echo "Checking that the images are available"
   docker pull ${CORE_REPO_RH}:${CUR_VERSION}
   docker pull ${FRONTEND_REPO_RH}:${CUR_VERSION}
   docker pull ${OPERATOR_REPO_RH}:${CUR_VERSION}
+  docker pull ${RYGG_REPO_RH}:${CUR_VERSION}
 elif [ "$1" == "bundle" ]; then
   echo "Releasing the bundle"
   do_push ${BUNDLE_SCAN_TAG} ${BUNDLE_PWD}
-  @echo "Publish complete."
-  @echo "Manual step: wait for the scan of ${CUR_VERSION} of the operator bundle at ${BUNDLE_WEBPAGE}. Press enter when complete."
-	@read -p "Manual Step: Tag the branch in the modeling tool with ${RELEASE_VERSION} [ok]"
-	@read -p "Manual Step: Click 'retain' on build #${IMAGES_TAG} of the modeling tool in the build pipeline [ok]"
+  echo "Publish complete."
+	read -p "Manual step: wait for the scan of ${CUR_VERSION} of the operator bundle at ${BUNDLE_WEBPAGE}. Press enter when complete."
+	read -p "Manual Step: Tag the branch in the modeling tool with ${CUR_VERSION} [ok]"
+  echo "Azure tag for kernel: ${KERNEL_VERSION_AZURE}"
+  echo "Azure tag for frontend: ${FRONTEND_VERSION_AZURE}"
+  echo "Azure tag for rygg: ${RYGG_VERSION_AZURE}"
+  read -p "Manual Step: Click 'retain' on the build(s) that generated the above images. [ok]"
 fi

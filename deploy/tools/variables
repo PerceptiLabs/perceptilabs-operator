@@ -25,17 +25,20 @@ BUNDLE_REPO_RH=registry.connect.redhat.com/perceptilabs/perceptilabs-operator-bu
 CORE_REPO_RH=registry.connect.redhat.com/perceptilabs/perceptilabs-core-1
 FRONTEND_REPO_RH=registry.connect.redhat.com/perceptilabs/perceptilabs-frontend-1
 OPERATOR_REPO_RH=registry.connect.redhat.com/perceptilabs/perceptilabs-operator
+RYGG_REPO_RH=registry.connect.redhat.com/perceptilabs/perceptilabs-rygg-1
 
 SCAN_REGISTRY=scan.connect.redhat.com
 BUNDLE_SCAN_REPO=scan.connect.redhat.com/ospid-4461f832-2e46-4293-824a-b5202129288b/perceptilabs-operator-bundle
 CORE_SCAN_REPO=scan.connect.redhat.com/ospid-c5106ae3-19d7-4938-8d58-78789f1bf195/perceptilabs-core-1
 FRONTEND_SCAN_REPO=scan.connect.redhat.com/ospid-b7e10edb-0d6c-4222-9374-85874f0204a7/perceptilabs-frontend-1
 OPERATOR_SCAN_REPO=scan.connect.redhat.com/ospid-931b24cb-19a8-40a0-91ef-ba57f919ec30/perceptilabs-operator
+RYGG_SCAN_REPO=scan.connect.redhat.com/ospid-93518a3c-f41c-4f5b-a6fa-1700ba620c99/perceptilabs-rygg-1
 
 OPERATOR_WEBPAGE=https://connect.redhat.com/project/2727121/view
 CORE_WEBPAGE=https://connect.redhat.com/project/2727091/view
 FRONTEND_WEBPAGE=https://connect.redhat.com/project/2727111/view
 BUNDLE_WEBPAGE=https://connect.redhat.com/project/5892561/images
+RYGG_WEBPAGE=https://connect.redhat.com/project/5915781/images
 
 #######################
 # Derived Constants
@@ -90,11 +93,13 @@ BUNDLE_TAG_RH=${BUNDLE_REPO_RH}:${CUR_VERSION}
 CORE_TAG_RH=${CORE_REPO_RH}:${CUR_VERSION}
 FRONTEND_TAG_RH=${FRONTEND_REPO_RH}:${CUR_VERSION}
 OPERATOR_TAG_RH=${OPERATOR_REPO_RH}:${CUR_VERSION}
+RYGG_TAG_RH=${RYGG_REPO_RH}:${CUR_VERSION}
 
 BUNDLE_SCAN_TAG=${BUNDLE_SCAN_REPO}:${CUR_VERSION}
 CORE_SCAN_TAG=${CORE_SCAN_REPO}:${CUR_VERSION}
 FRONTEND_SCAN_TAG=${FRONTEND_SCAN_REPO}:${CUR_VERSION}
 OPERATOR_SCAN_TAG=${OPERATOR_SCAN_REPO}:${CUR_VERSION}
+RYGG_SCAN_TAG=${RYGG_SCAN_REPO}:${CUR_VERSION}
 
 # Quay bundle file locations
 BUNDLE_DIR_QUAY=${PROJECT_ROOT}/bundle_quay
